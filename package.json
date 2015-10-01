@@ -1,12 +1,21 @@
 {
   "name": "pamatcher",
   "version": "0.0.1",
-  "description": "",
+  "description": "A pattern matching library",
   "main": ".lib/pamatcher.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pmros/pamatcher.git"
+  },
+  "keywords": [
+    "pattern",
+    "pattern matching",
+    "match"
+  ],
   "scripts": {
     "test": "gulp jasmine"
   },
-  "author": "",
+  "author": "Patricio M. Ros",
   "license": "MIT",
   "devDependencies": {
     "gulp-jasmine": "^2.0.1",
