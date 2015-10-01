@@ -1,0 +1,17 @@
+{
+  "name": "pamatcher",
+  "version": "0.0.1",
+  "description": "",
+  "main": ".lib/pamatcher.js",
+  "scripts": {
+    "test": "gulp jasmine"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp-jasmine": "^2.0.1",
+    "jasmine-core": "^2.3.4",
+    "jasmine-spec-reporter": "^2.2.3",
+    "livescript": "^1.4.0"
+  }
+}
