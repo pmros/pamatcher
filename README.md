@@ -6,7 +6,7 @@ Pamatcher is a pattern matching library for Javascript. It's like regular expres
 ## How can I use Pamatcher?
 You can download Pamatcher using npm. This is an example:
 
-```
+```js
 var pm = require('pamatcher');
 
 matcher = pm.Pamatcher(
