@@ -14,7 +14,7 @@ This is an example of use:
 ```js
 var pm = require('pamatcher');
 
-matcher = pm.Pamatcher(
+matcher = new pm.Pamatcher(
   function(i) { return i < 10 },
   pm.repeat( function(i) { return i%2==0 } ),
   function(i) { return i > 10 }
@@ -31,11 +31,10 @@ In the example, the pattern is simple: match a number lesser than 10, followed b
 
 That code could be a little noisy, it's better coded in Javascript ES6 syntax or even better with LiveScript:
 ```livescript
-matcher = pm.Pamatcher do
+matcher = new pm.Pamatcher do
   (< 10)
   pm.repeat -> it%2 is 0
   (> 10)
-
 ```
 
 ## TODO
