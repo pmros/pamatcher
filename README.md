@@ -4,7 +4,12 @@
 Pamatcher is a pattern matching library for Javascript. It's like regular expressions but more general. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
 
 ## How can I use Pamatcher?
-You can download Pamatcher using npm. This is an example:
+You can download Pamatcher using npm.
+```
+npm install pamatcher
+```
+
+This is an example of use:
 
 ```js
 var pm = require('pamatcher');
