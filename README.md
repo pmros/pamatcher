@@ -1,6 +1,7 @@
 #Pamatcher [![npm version](https://badge.fury.io/js/pamatcher.svg)](http://badge.fury.io/js/pamatcher)
 
 Pamatcher is a pattern matching library for Javascript. It's like regular expressions but more general. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
+Tested on node.js 4.4.1.
 
 ## How can I use Pamatcher?
 You can download Pamatcher using npm.
@@ -13,13 +14,13 @@ This is an example of use:
 ```js
 var pm = require('pamatcher');
 
-matcher = new pm.Pamatcher(
+var matcher = new pm.Pamatcher(
   function(i) { return i < 10 },
   pm.repeat( function(i) { return i%2==0 } ),
   function(i) { return i > 10 }
 );
 
-result = matcher.test([1, 4, 8, 44, 55]);
+var result = matcher.test([1, 4, 8, 44, 55]);
 if(result)
   console.log("Pattern matches!");
 else
