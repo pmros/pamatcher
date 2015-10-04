@@ -1,6 +1,5 @@
-#Pamatcher
+#Pamatcher [![npm version](https://badge.fury.io/js/pamatcher.svg)](http://badge.fury.io/js/pamatcher)
 
-## What is Pamatcher?
 Pamatcher is a pattern matching library for Javascript. It's like regular expressions but more general. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
 
 ## How can I use Pamatcher?
