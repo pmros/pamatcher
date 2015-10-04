@@ -27,7 +27,7 @@ else
   console.log("Pattern doesn't match.");
 ```
 
-In the example, the pattern is simple: match a number lesser than 10, followed by zero o more odd numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!". See tests for more examples.
+In the example, the pattern is simple: match a number lesser than 10, followed by zero o more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!". See tests for more examples.
 
 That code could be a little noisy, it's better coded in Javascript ES6 syntax or even better with LiveScript:
 ```livescript
