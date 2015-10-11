@@ -39,8 +39,8 @@ describe 'Pamatcher' !->
 
   test 'can match a complex expression' !->
     matcher = pamatcher do
-      optional: (is 123)
-      repeat: [(< 10), (> 20) ]
-      or: [ (> 100), (< 5) ]
-    result = matcher.test [ 123 7 23 4 56 3 ]
+      * optional: (is 123)
+      * repeat: [(< 10), (> 20) ]
+      * or: [ (> 100), (< 5) ]
+    result = matcher.test [ 123 7 23 4 56 200 ]
     expect result .to-be true

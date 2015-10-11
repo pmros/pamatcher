@@ -1,12 +1,12 @@
-type = Symbol 'type'
+to-array = -> if Array.is-array it then it else [it]
+copy-transitions = (from, to) ->
+  Object.get-own-property-symbols(from).for-each (state) ->
+    to[state] = from[state]
 
-AST = {}
-
-AST.node = (predicate) ->
+node = (predicate) ->
   start = Symbol 'start'
   accept = Symbol 'accept'
   {
-    (type): true
     startState: start
     acceptState: accept
     transitions:
@@ -17,14 +17,27 @@ AST.node = (predicate) ->
         ...
   }
 
-is-AST = -> it[type] is true
-to-node = -> if is-AST it then it else AST.node it
-copy-transitions = (from, to) ->
-  Object.get-own-property-symbols(from).for-each (state) ->
-    to[state] = from[state]
+parselets = {}
 
-AST.or = (...args) ->
-  args = args.map -> to-node it
+parselets.sequence = (a) ->
+  args = a.map -> parse it
+
+  transitions = {}
+  last-accept = null
+
+  args.for-each ->
+    copy-transitions it.transitions, transitions
+    transitions[last-accept] = [ [ it.start-state, null ] ] if last-accept?
+    last-accept := it.accept-state
+
+  {
+    startState: args[0].start-state
+    acceptState: args[*-1].accept-state
+    transitions: transitions
+  }
+
+parselets.or = (args) ->
+  args = to-array(args.or).map -> parse it
 
   start = Symbol 'start'
   accept = Symbol 'accept'
@@ -41,14 +54,13 @@ AST.or = (...args) ->
   transitions[accept] = []
 
   {
-    (type): true
     startState: start
     acceptState: accept
     transitions: transitions
   }
 
-AST.optional = (a) ->
-  a = to-node a
+parselets.optional = (a) ->
+  a = parse a.optional
 
   start = Symbol 'start'
   accept = Symbol 'accept'
@@ -69,16 +81,13 @@ AST.optional = (a) ->
   transitions[accept] = []
 
   {
-    (type): true
     startState: start
     acceptState: accept
     transitions: transitions
   }
 
-AST.opt = AST.optional
-
-AST.repeat = (a) ->
-  a = to-node a
+parselets.repeat = (a) ->
+  a = parse a.repeat
 
   start = Symbol 'start'
   accept = Symbol 'accept'
@@ -95,32 +104,30 @@ AST.repeat = (a) ->
   transitions[accept] = []
 
   {
-    (type): true
     startState: start
     acceptState: accept
     transitions: transitions
   }
 
-AST.rep = AST.repeat
+parselets.predicate = (e) -> node e
 
-AST.sequence = (...args) ->
-  args = args.map -> to-node it
+parselets.value = (e) -> node (=== e)
 
-  transitions = {}
-  last-accept = null
+parse = (exp) ->
+  switch typeof! exp
+    case \Object
+      for e in Object.get-own-property-names(exp)
+        if e in Object.get-own-property-names(parselets)
+          return parselets[e](exp)
+      parselets.value exp
 
-  args.for-each ->
-    copy-transitions it.transitions, transitions
-    transitions[last-accept] = [ [ it.start-state, null ] ] if last-accept?
-    last-accept := it.accept-state
+    case \Array
+      parselets.sequence exp
 
-  {
-    (type): true
-    startState: args[0].start-state
-    acceptState: args[*-1].accept-state
-    transitions: transitions
-  }
+    case \Function
+      parselets.predicate exp
 
-AST.seq = AST.sequence
+    default
+      parselets.value exp
 
-module.exports = AST
+module.exports = parse
