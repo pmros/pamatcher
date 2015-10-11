@@ -24,10 +24,11 @@ var matcher = pamatcher(
 );
 
 var result = matcher.test([1, 4, 8, 44, 55]);
-if(result)
+if(result) {
   console.log("Pattern matches!");
-else
+} else {
   console.log("Pattern doesn't match.");
+}
 ```
 
 In the example, the pattern is simple: match a number lesser than 10, followed by zero o more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!". See tests for more examples.
@@ -36,7 +37,7 @@ In the example, the pattern is simple: match a number lesser than 10, followed b
 
 ### pamatcher(expression)
 
-This is function transforms a pattern expression into a [matcher](#matcher-object). This is the only thing you need to import or require to use pamatcher.
+This is a function that transforms a pattern expression into a [matcher](#matcher-object). This is the only thing you need to import/require to use pamatcher library.
 
 A pattern expression is a JavaScript object that specify the pattern you want to use. A pattern expression can be:
 
