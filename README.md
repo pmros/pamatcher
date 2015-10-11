@@ -36,7 +36,7 @@ In the example, the pattern is simple: match a number lesser than 10, followed b
 
 ### pamatcher(expression)
 
-This is function transforms a pattern expression into a [matcher](.#matcher-object). This is the only thing you need to import or require to use pamatcher.
+This is function transforms a pattern expression into a [matcher](#matcher-object). This is the only thing you need to import or require to use pamatcher.
 
 A pattern expression is a JavaScript object that specify the pattern you want to use. A pattern expression can be:
 
