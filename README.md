@@ -12,6 +12,8 @@ You can install pamatcher using npm:
 npm install pamatcher
 ```
 
+If you want to use pamatcher from browser, you can use [jspm](http://jspm.io/). Here you have a complete pamatcher demo for browser at [gist](https://gist.github.com/pmros/137ecf2351e0f2fe44d4) (or live at [bl.ocks.org](http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4)). You can play online with pamatcher via [jsfiddle](https://jsfiddle.net/8f4mcoq5/).
+
 This is an example of use:
 
 ```js
@@ -75,7 +77,7 @@ test method returns true if your pattern expression matchs your input, otherwise
 
 ## TODO
 - [x] Pattern expressions.
-- [ ] Browser suport.
+- [x] Browser suport.
 - [ ] Cardinality for repeat pattern.
 - [ ] Better documentation.
 - [ ] More tests.
