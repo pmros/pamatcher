@@ -1,4 +1,5 @@
 to-array = -> if Array.is-array it then it else [it]
+
 copy-transitions = (from, to) ->
   Object.get-own-property-symbols(from).for-each (state) ->
     to[state] = from[state]
@@ -17,11 +18,7 @@ node = (predicate) ->
         ...
   }
 
-parselets = {}
-
-parselets.sequence = (a) ->
-  args = a.map -> parse it
-
+_sequence = (args) ->
   transitions = {}
   last-accept = null
 
@@ -36,9 +33,7 @@ parselets.sequence = (a) ->
     transitions: transitions
   }
 
-parselets.or = (args) ->
-  args = to-array(args.or).map -> parse it
-
+_or = (args) ->
   start = Symbol 'start'
   accept = Symbol 'accept'
 
@@ -59,16 +54,13 @@ parselets.or = (args) ->
     transitions: transitions
   }
 
-parselets.optional = (a) ->
-  a = parse a.optional
-
+_optional = (a) ->
   start = Symbol 'start'
   accept = Symbol 'accept'
 
   transitions = {}
 
-  Object.get-own-property-symbols(a.transitions).for-each (state) ->
-    transitions[state] = a.transitions[state]
+  copy-transitions a.transitions, transitions
 
   transitions[start] =
     * a.start-state, null
@@ -86,16 +78,13 @@ parselets.optional = (a) ->
     transitions: transitions
   }
 
-parselets.repeat = (a) ->
-  a = parse a.repeat
-
+_star = (a) ->
   start = Symbol 'start'
   accept = Symbol 'accept'
 
   transitions = {}
 
-  Object.get-own-property-symbols(a.transitions).for-each (state) ->
-    transitions[state] = a.transitions[state]
+  copy-transitions a.transitions, transitions
 
   transitions[start] = transitions[a.accept-state] =
     * a.start-state, null
@@ -108,6 +97,22 @@ parselets.repeat = (a) ->
     acceptState: accept
     transitions: transitions
   }
+
+parselets = {}
+
+parselets.sequence = (a) ->
+  args = a.map -> parse it
+  _sequence args
+
+parselets.or = (args) ->
+  args = to-array(args.or).map -> parse it
+  _or args
+
+parselets.optional = (a) ->
+  _optional parse a.optional
+
+parselets.repeat = (a) ->
+  _star parse a.repeat
 
 parselets.predicate = (e) -> node e
 
