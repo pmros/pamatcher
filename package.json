@@ -18,7 +18,9 @@
   "author": "Patricio M. Ros",
   "license": "MIT",
   "devDependencies": {
+    "gulp": "^3.9.0",
     "gulp-jasmine": "^2.0.1",
+    "gulp-livescript": "^2.4.0",
     "jasmine-core": "^2.3.4",
     "jasmine-spec-reporter": "^2.2.3",
     "livescript": "^1.4.0"
