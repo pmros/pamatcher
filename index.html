@@ -3,11 +3,136 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>pamatcher by pmros</title>
+    <title>pamatcher</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remodal/1.0.4/remodal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remodal/1.0.4/remodal-default-theme.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.7.0/codemirror.min.css">
+    <style>
+      body {
+        overflow-x: hidden;
+      }
+
+      #try .CodeMirror {
+        border: 1px solid gray;
+        line-height: 1em;
+        height: 5.7em;
+        margin-bottom: 20px;
+      }
+
+      #try .CodeMirror pre {
+        box-shadow: unset;
+      }
+
+      #try-buttom {
+        display: none;
+      }
+
+      #try #result {
+        padding: 10px 0px;
+        font-size: large;
+        text-align: right;
+        float: right;
+        font-weight: bold;
+      }
+
+      #try #ok, #try #fail {
+        display: none;
+      }
+
+      #try #ok {
+        color: green;
+      }
+
+      #try #fail {
+        color: red;
+      }
+
+      #try #test {
+        float: left;
+      }
+
+      #try .remodal-confirm {
+        background: #00a;
+      }
+
+      #try .remodal-confirm:hover, #try .remodal-confirm:focus {
+        background: #00f;
+      }
+
+      #try .remodal-close {
+        left: auto;
+        right: 5px;
+      }
+
+      #try h1 {
+        color: darkGray;
+      }
+
+      #try fieldset {
+        text-align: left;
+        border: 0;
+      }
+
+      #try label {
+        display: block;
+        margin-bottom: 14.76px;
+      }
+
+      #try textarea {
+        width: 100%;
+        border: 1px solid #CCC;
+        margin-bottom: 18px;
+        padding: 5.4px 6.3px;
+      }
+    </style>
+    <script src="https://jspm.io/system@0.19.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/remodal/1.0.4/remodal.min.js"></script>
     <script src="javascripts/respond.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.7.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.7.0/mode/javascript/javascript.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+          var options = {
+            mode: "javascript"
+          };
+
+          var patternArea = CodeMirror.fromTextArea(document.getElementById('pattern'), options);
+          var inputArea = CodeMirror.fromTextArea(document.getElementById('input'), options);
+
+          System.import('npm:pamatcher').then(function(pamatcher) {
+              $("#try-buttom").show();
+
+              $(document).on('opening', '.remodal', function () {
+                $('#ok, #fail').hide();
+                $("#try textarea").val("");
+              });
+
+              $("#try textarea").on('change keyup paste', (e) => {
+                $('#ok, #fail').hide();
+              });
+
+              $("#test").click((e) => {
+                $('#ok, #fail').hide();
+
+                var pattern = eval(patternArea.getValue());
+                var input = eval(inputArea.getValue());
+
+                var matcher = pamatcher(pattern);
+                var result = matcher.test(input);
+
+                if(result) {
+                    $('#ok').show();
+                } else {
+                    $('#fail').show();
+                }
+              });
+          });
+      });
+    </script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -18,12 +143,33 @@
 
   </head>
   <body>
+      <div class="remodal" data-remodal-id="try" id="try">
+        <button data-remodal-action="close" class="remodal-close"></button>
+        <h1>Try pamatcher!</h1>
+        <form>
+          <fieldset>
+            <label for='pattern'>Pattern</label>
+            <textarea rows='4' id='pattern'>[
+  (i) => i < 10,
+  { repeat: (i) => i%2==0 },
+  (i) => i > 10
+]</textarea>
+
+            <label for='input'>Input</label>
+            <textarea rows='4' id='input'>[1, 4, 8, 44, 55]</textarea>
+          </fieldset>
+          <button id='test' type='submit' class="remodal-confirm">Test</button>
+          <div id='result'>
+            <div id='ok'><i class="fa fa-check-circle"></i> Pattern matches!</div>
+            <div id='fail'><i class="fa fa-ban"></i> Pattern doesn't match.</div>
+          </div>
+        </form>
+      </div>
+
       <div id="header">
         <nav>
           <li class="fork"><a href="https://github.com/pmros/pamatcher">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/pmros/pamatcher/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/pmros/pamatcher/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
+          <li class="downloads" id="try-buttom"><a href="#try">Try pamatcher!</a></li>
         </nav>
       </div><!-- end header -->
 
@@ -33,18 +179,10 @@
         <div id="title">
           <h1>pamatcher</h1>
           <p>A pattern matching library for JavaScript</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/pmros">pmros</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
         </div>
 
-        <h1>
-<a id="pamatcher-" class="anchor" href="#pamatcher-" aria-hidden="true"><span class="octicon octicon-link"></span></a>pamatcher <a href="http://badge.fury.io/js/pamatcher"><img src="https://badge.fury.io/js/pamatcher.svg" alt="npm version"></a>
-</h1>
 
-<p>A pattern matching library for JavaScript.</p>
-
-<p>It's like regular expressions but more general. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.</p>
+<p><strong>pamatcher</strong> is something like regular expressions but is more general. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.</p>
 
 <p>Tested on node.js 4.1.1.</p>
 
@@ -55,7 +193,7 @@
 
 <div class="highlight highlight-source-shell"><pre>npm install pamatcher</pre></div>
 
-<p>If you want to use pamatcher from browser, you can use <a href="http://jspm.io/">jspm</a>. Here you have a complete pamatcher demo for browser at <a href="https://gist.github.com/pmros/137ecf2351e0f2fe44d4">gist</a> (or live at <a href="http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4">bl.ocks.org</a>). You can play online with pamatcher via <a href="https://jsfiddle.net/8f4mcoq5/">jsfiddle</a>.</p>
+<p>If you want to use pamatcher from browser, you can use <a href="http://jspm.io/">jspm</a>. Here you have a complete pamatcher demo for browser at <a href="https://gist.github.com/pmros/137ecf2351e0f2fe44d4">gist</a> (or live at <a href="http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4">bl.ocks.org</a>).</p>
 
 <p>This is an example of use:</p>
 
@@ -74,7 +212,8 @@
   <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Pattern doesn't match.<span class="pl-pds">"</span></span>);
 }</pre></div>
 
-<p>In the example, the pattern is simple: match a number lesser than 10, followed by zero o more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!". See tests for more examples.</p>
+<p>In the example, the pattern is simple: match a number lesser than 10, followed by zero o more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!".</p>
+<p><a href="#try">Try pamatcher!</a></p>
 
 <h2>
 <a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
@@ -143,10 +282,15 @@ It's something like this regex:  /a*/</p>
 <li>[ ] Better documentation.</li>
 <li>[ ] More tests.</li>
 </ul>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/pmros">pmros</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+
       </section>
 
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+
+
   </body>
 </html>
