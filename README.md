@@ -7,8 +7,6 @@ A pattern matching library for JavaScript.
 
 It's like regular expressions but more general. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
 
-Tested on node.js 4.1.1.
-
 ## Installation and usage
 You can install pamatcher using npm:
 ```bash
