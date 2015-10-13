@@ -104,6 +104,8 @@
 
               $(document).on('opening', '.remodal', function () {
                 $('#ok, #fail').hide();
+                $('#input').focus();
+                $('#pattern').focus();
               });
 
               $("#try textarea").on('change keyup paste', (e) => {
