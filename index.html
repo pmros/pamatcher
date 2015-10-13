@@ -11,10 +11,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.7.0/codemirror.min.css">
     <style>
-      body {
-        overflow-x: hidden;
-      }
-
       #try .CodeMirror {
         border: 1px solid gray;
         line-height: 1em;
@@ -108,7 +104,6 @@
 
               $(document).on('opening', '.remodal', function () {
                 $('#ok, #fail').hide();
-                $("#try textarea").val("");
               });
 
               $("#try textarea").on('change keyup paste', (e) => {
