@@ -1,4 +1,7 @@
-# pamatcher [![npm version](https://badge.fury.io/js/pamatcher.svg)](http://badge.fury.io/js/pamatcher)
+# pamatcher 
+
+[![npm version](https://badge.fury.io/js/pamatcher.svg)](http://badge.fury.io/js/pamatcher)
+[![Build Status](https://travis-ci.org/pmros/pamatcher.svg)](https://travis-ci.org/pmros/pamatcher)
 
 A pattern matching library for JavaScript.
 
