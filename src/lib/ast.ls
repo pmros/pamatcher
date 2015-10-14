@@ -18,6 +18,23 @@ node = (predicate) ->
         ...
   }
 
+_clone = (a) ->
+  sym-map = {}
+  transitions = {}
+
+  Object.get-own-property-symbols(a.transitions).for-each (state) ->
+    sym-map[state] = Symbol state.toString()
+
+  Object.get-own-property-symbols(a.transitions).for-each (state) ->
+    transitions[sym-map[state]] = a.transitions[state].map ->
+      [ sym-map[it.0] ] ++ it.slice(1)
+
+  {
+    startState: sym-map[a.start-state]
+    acceptState: sym-map[a.accept-state]
+    transitions: transitions
+  }
+
 _sequence = (args) ->
   transitions = {}
   last-accept = null
@@ -115,6 +132,10 @@ _plus = (a) ->
     transitions: transitions
   }
 
+_replicate = (a, times) ->
+  args = Array.from (new Array(times)), (void) -> _clone a
+  _sequence args
+
 parselets = {}
 
 parselets.sequence = (a) ->
@@ -130,10 +151,20 @@ parselets.optional = (a) ->
 
 parselets.repeat = (a) ->
   nod = parse a.repeat
-  if a.min == 1
-    _plus nod
+  if a.max? and a.max > 0
+    if a.min == a.max                     # {2,2}
+      _replicate nod, a.min
+    else if !a.min? or a.min <= 0         # {,5}
+      _replicate (_optional nod), a.max
+    else                                  # {3,7}
+      _sequence [ (_replicate nod, a.min), (_replicate _optional nod, a.max - a.min) ]
   else
-    _star nod
+    if !a.min? or a.min == 0              # {,}
+      _star nod
+    else if a.min == 1                    # {1,}
+      _plus nod
+    else                                  # {7,}
+      _sequence [ (_replicate nod, a.min - 1), _plus nod ]
 
 parselets.predicate = (e) -> node e
 

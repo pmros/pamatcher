@@ -32,6 +32,66 @@ describe 'Pamatcher' !->
     result = matcher.test [ 1 2 ]
     expect result .to-be true
 
+  test 'can match two repeated items minimum 2 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2
+    result = matcher.test [ 1 2 ]
+    expect result .to-be true
+
+  test 'can match three repeated item minimum 2 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2
+    result = matcher.test [ 1 2 3 ]
+    expect result .to-be true
+
+  test 'cannot match one repeated item minimum 2 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2
+    result = matcher.test [ 1 ]
+    expect result .to-be false
+
+  test 'can match two repeated items exactly 2 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2, max: 2
+    result = matcher.test [ 1 2 ]
+    expect result .to-be true
+
+  test 'cannot match one repeated item exactly 2 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2, max: 2
+    result = matcher.test [ 1 ]
+    expect result .to-be false
+
+  test 'cannot match three repeated item exactly 2 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2, max: 2
+    result = matcher.test [ 1 2 3 ]
+    expect result .to-be false
+
+  test 'can match one repeated item maximum 2 times' !->
+    matcher = pamatcher repeat: (< 10), max: 2
+    result = matcher.test [ 1 ]
+    expect result .to-be true
+
+  test 'can match two repeated item maximum 2 times' !->
+    matcher = pamatcher repeat: (< 10), max: 2
+    result = matcher.test [ 1 2 ]
+    expect result .to-be true
+
+  test 'cannot match three repeated items maximum 2 times' !->
+    matcher = pamatcher repeat: (< 10), max: 2
+    result = matcher.test [ 1 2 3 ]
+    expect result .to-be false
+
+  test 'can match two repeated items min 2 times max 3 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2, max: 3
+    result = matcher.test [ 1 2 ]
+    expect result .to-be true
+
+  test 'can match three repeated items min 2 times max 3 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2, max: 3
+    result = matcher.test [ 1 2 3 ]
+    expect result .to-be true
+
+  test 'cannot match four repeated items min 2 times max 3 times' !->
+    matcher = pamatcher repeat: (< 10), min: 2, max: 3
+    result = matcher.test [ 1 2 3 4 ]
+    expect result .to-be false
+
   test 'can match logical disjunction' !->
     matcher = pamatcher or: (< 10)
     result = matcher.test [ 1 ]
