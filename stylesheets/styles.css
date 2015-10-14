@@ -181,6 +181,7 @@ a:active {
 h1 {
   font-size: 2em;
   margin: 0.67em 0;
+  text-shadow: 0 0 3px #aaa;
 }
 
 h2 {
