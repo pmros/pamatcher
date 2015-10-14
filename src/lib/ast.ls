@@ -1,4 +1,5 @@
 to-array = -> if Array.is-array it then it else [it]
+
 copy-transitions = (from, to) ->
   Object.get-own-property-symbols(from).for-each (state) ->
     to[state] = from[state]
@@ -17,11 +18,24 @@ node = (predicate) ->
         ...
   }
 
-parselets = {}
+_clone = (a) ->
+  sym-map = {}
+  transitions = {}
 
-parselets.sequence = (a) ->
-  args = a.map -> parse it
+  Object.get-own-property-symbols(a.transitions).for-each (state) ->
+    sym-map[state] = Symbol state.toString()
 
+  Object.get-own-property-symbols(a.transitions).for-each (state) ->
+    transitions[sym-map[state]] = a.transitions[state].map ->
+      [ sym-map[it.0] ] ++ it.slice(1)
+
+  {
+    startState: sym-map[a.start-state]
+    acceptState: sym-map[a.accept-state]
+    transitions: transitions
+  }
+
+_sequence = (args) ->
   transitions = {}
   last-accept = null
 
@@ -36,9 +50,7 @@ parselets.sequence = (a) ->
     transitions: transitions
   }
 
-parselets.or = (args) ->
-  args = to-array(args.or).map -> parse it
-
+_or = (args) ->
   start = Symbol 'start'
   accept = Symbol 'accept'
 
@@ -59,16 +71,13 @@ parselets.or = (args) ->
     transitions: transitions
   }
 
-parselets.optional = (a) ->
-  a = parse a.optional
-
+_optional = (a) ->
   start = Symbol 'start'
   accept = Symbol 'accept'
 
   transitions = {}
 
-  Object.get-own-property-symbols(a.transitions).for-each (state) ->
-    transitions[state] = a.transitions[state]
+  copy-transitions a.transitions, transitions
 
   transitions[start] =
     * a.start-state, null
@@ -86,16 +95,13 @@ parselets.optional = (a) ->
     transitions: transitions
   }
 
-parselets.repeat = (a) ->
-  a = parse a.repeat
-
+_star = (a) ->
   start = Symbol 'start'
   accept = Symbol 'accept'
 
   transitions = {}
 
-  Object.get-own-property-symbols(a.transitions).for-each (state) ->
-    transitions[state] = a.transitions[state]
+  copy-transitions a.transitions, transitions
 
   transitions[start] = transitions[a.accept-state] =
     * a.start-state, null
@@ -108,6 +114,57 @@ parselets.repeat = (a) ->
     acceptState: accept
     transitions: transitions
   }
+
+_plus = (a) ->
+  accept = Symbol 'accept'
+
+  transitions = {}
+
+  copy-transitions a.transitions, transitions
+
+  transitions[a.accept-state].push [ a.start-state, null ] [ accept, null ]
+
+  transitions[accept] = []
+
+  {
+    startState: a.start-state
+    acceptState: accept
+    transitions: transitions
+  }
+
+_replicate = (a, times) ->
+  args = Array.from (new Array(times)), (void) -> _clone a
+  _sequence args
+
+parselets = {}
+
+parselets.sequence = (a) ->
+  args = a.map -> parse it
+  _sequence args
+
+parselets.or = (args) ->
+  args = to-array(args.or).map -> parse it
+  _or args
+
+parselets.optional = (a) ->
+  _optional parse a.optional
+
+parselets.repeat = (a) ->
+  nod = parse a.repeat
+  if a.max? and a.max > 0
+    if a.min == a.max                     # {2,2}
+      _replicate nod, a.min
+    else if !a.min? or a.min <= 0         # {,5}
+      _replicate (_optional nod), a.max
+    else                                  # {3,7}
+      _sequence [ (_replicate nod, a.min), (_replicate _optional nod, a.max - a.min) ]
+  else
+    if !a.min? or a.min == 0              # {,}
+      _star nod
+    else if a.min == 1                    # {1,}
+      _plus nod
+    else                                  # {7,}
+      _sequence [ (_replicate nod, a.min - 1), _plus nod ]
 
 parselets.predicate = (e) -> node e
 
