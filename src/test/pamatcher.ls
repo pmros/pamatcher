@@ -22,6 +22,16 @@ describe 'Pamatcher' !->
     result = matcher.test [ 1 3 5 6 ]
     expect result .to-be true
 
+  test 'can match a repeated item minimum 1 time' !->
+    matcher = pamatcher repeat: (< 10), min: 1
+    result = matcher.test [ 1 ]
+    expect result .to-be true
+
+  test 'can match two repeated item minimum 1 time' !->
+    matcher = pamatcher repeat: (< 10), min: 1
+    result = matcher.test [ 1 2 ]
+    expect result .to-be true
+
   test 'can match logical disjunction' !->
     matcher = pamatcher or: (< 10)
     result = matcher.test [ 1 ]

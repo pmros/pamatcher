@@ -98,6 +98,23 @@ _star = (a) ->
     transitions: transitions
   }
 
+_plus = (a) ->
+  accept = Symbol 'accept'
+
+  transitions = {}
+
+  copy-transitions a.transitions, transitions
+
+  transitions[a.accept-state].push [ a.start-state, null ] [ accept, null ]
+
+  transitions[accept] = []
+
+  {
+    startState: a.start-state
+    acceptState: accept
+    transitions: transitions
+  }
+
 parselets = {}
 
 parselets.sequence = (a) ->
@@ -112,7 +129,11 @@ parselets.optional = (a) ->
   _optional parse a.optional
 
 parselets.repeat = (a) ->
-  _star parse a.repeat
+  nod = parse a.repeat
+  if a.min == 1
+    _plus nod
+  else
+    _star nod
 
 parselets.predicate = (e) -> node e
 
