@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "A pattern matching library",
   "main": "lib/pamatcher.js",
+  "homepage": "http://pmros.github.io/pamatcher",
   "repository": {
     "type": "git",
     "url": "git://github.com/pmros/pamatcher.git"
