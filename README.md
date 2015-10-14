@@ -67,7 +67,7 @@ It's something like this regex:  /a?/
 A sequence of zero o more expressions repeated.
 It's something like this regex:  /a*/
 
-#### { repeat: [expression], min: 2, max: 5 }
+#### { repeat: [expression], min: [int], max: [int] }
 A sequence from two up to five expressions repeated.
 It's something like this regex: /a{2,5}/
 
@@ -83,6 +83,6 @@ test method returns true if your pattern expression matchs your input, otherwise
 ## TODO
 - [x] Pattern expressions.
 - [x] Browser suport.
-- [ ] Cardinality for repeat pattern.
+- [x] Cardinality for repeat pattern.
 - [ ] Better documentation.
 - [ ] More tests.
