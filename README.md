@@ -67,6 +67,10 @@ It's something like this regex:  /a?/
 A sequence of zero o more expressions repeated.
 It's something like this regex:  /a*/
 
+#### { repeat: [expression], min: 2, max: 5 }
+A sequence from two up to five expressions repeated.
+It's something like this regex: /a{2,5}/
+
 ### matcher object
 A matcher object can check if your expression matches to an input.
 
