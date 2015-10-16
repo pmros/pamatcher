@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git://github.com/pmros/pamatcher.git"
   },
+  "bugs": {
+    "url": "https://github.com/pmros/pamatcher/issues"
+  },
   "keywords": [
     "pattern",
     "pattern matching",
