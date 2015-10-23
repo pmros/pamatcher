@@ -14,7 +14,9 @@
   "keywords": [
     "pattern",
     "pattern matching",
-    "match"
+    "match",
+    "iterator",
+    "iterable"
   ],
   "scripts": {
     "test": "gulp jasmine"
