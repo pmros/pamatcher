@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/pamatcher.svg)](http://badge.fury.io/js/pamatcher)
 [![Build Status](https://travis-ci.org/pmros/pamatcher.svg)](https://travis-ci.org/pmros/pamatcher)
 
-A pattern matching library for JavaScript.
+A pattern matching library for JavaScript iterators.
 
 It's like regular expressions but more general. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
 
@@ -55,7 +55,7 @@ A sequence of expressions.
 It's something like this regex:  /abc/
 Usually pamatcher can convert arrays of expressions to a sequence expression for a better readability. Also pamatcher function can automatically convert any number of arguments to a sequence expression (see example above).
 
-#### { or: [expressions or array of expressions] }
+#### { or: [array of expressions] }
 Logical or of multiple expressions.
 It's something like this regex:  /(a|b|c)/
 
