@@ -84,5 +84,6 @@ test method returns true if your pattern expression matchs your input, otherwise
 - [x] Pattern expressions.
 - [x] Browser suport.
 - [x] Cardinality for repeat pattern.
-- [ ] Better documentation.
-- [ ] More tests.
+- [ ] Error handling.
+- [ ] Capturing groups.
+- [ ] More information avaible for predicates (index, previous item...).
