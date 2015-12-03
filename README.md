@@ -5,7 +5,7 @@
 
 A pattern matching library for JavaScript iterators.
 
-**pamatcher** is a JavaScript library that generelatize the notion of regular expressions to any sequence of items of any type. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
+**pamatcher** is a JavaScript library that generelatizes the notion of regular expressions to any sequence of items of any type. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
 
 ## Installation and usage
 You can install pamatcher using npm:
