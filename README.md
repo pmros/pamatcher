@@ -5,7 +5,7 @@
 
 A pattern matching library for JavaScript iterators.
 
-**pamatcher** is a JavaScript library that generelatizes the notion of regular expressions to any sequence of items of any type. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
+**pamatcher** is a JavaScript library that generalizes the notion of regular expressions to any sequence of items of any type. Instead strings, you can use any iterable or iterator as input. Instead of characters you can use any predicate as item matcher. So you can do pattern matching in a general and declarative way.
 
 ## Installation and usage
 You can install pamatcher using npm:
@@ -34,7 +34,7 @@ if(result) {
 }
 ```
 
-In the example, the pattern is simple: match a number lesser than 10, followed by zero o more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!". See tests for more examples.
+In the example, the pattern is simple: match a number lesser than 10, followed by zero or more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!". See tests for more examples.
 
 ## API
 
@@ -64,7 +64,7 @@ An optional expression.
 It's something like this regex:  /a?/
 
 #### { repeat: [expression] }
-A sequence of zero o more expressions repeated.
+A sequence of zero or more expressions repeated.
 It's something like this regex:  /a*/
 
 #### { repeat: [expression], min: [int], max: [int] }
