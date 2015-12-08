@@ -13,8 +13,6 @@ You can install pamatcher using npm:
 npm install pamatcher
 ```
 
-If you want to use pamatcher from browser, you can use [jspm](http://jspm.io/). Here you have a complete pamatcher demo for browser at [gist](https://gist.github.com/pmros/137ecf2351e0f2fe44d4) (or live at [bl.ocks.org](http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4)). You can play online with pamatcher via [jsfiddle](https://jsfiddle.net/8f4mcoq5/).
-
 This is an example of use:
 
 ```js
@@ -35,6 +33,8 @@ if(result) {
 ```
 
 In the example, the pattern is simple: match a number lesser than 10, followed by zero or more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!". See tests for more examples.
+
+If you want to use pamatcher from browser, you can use [jspm](http://jspm.io/). Here you have a complete pamatcher demo for browser at [gist](https://gist.github.com/pmros/137ecf2351e0f2fe44d4) (or live at [bl.ocks.org](http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4)). You can play online with pamatcher via [jsfiddle](https://jsfiddle.net/8f4mcoq5/).
 
 ## API
 
