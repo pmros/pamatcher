@@ -23,7 +23,7 @@ _clone = (a) ->
   transitions = {}
 
   Object.get-own-property-symbols(a.transitions).for-each (state) ->
-    sym-map[state] = Symbol state.toString()
+    sym-map[state] = Symbol state.to-string!
 
   Object.get-own-property-symbols(a.transitions).for-each (state) ->
     transitions[sym-map[state]] = a.transitions[state].map ->
@@ -133,7 +133,7 @@ _plus = (a) ->
   }
 
 _replicate = (a, times) ->
-  args = Array.from (new Array(times)), (void) -> _clone a
+  args = [ _clone(a) for til times ]
   _sequence args
 
 parselets = {}
@@ -155,16 +155,18 @@ parselets.repeat = (a) ->
     if a.min == a.max                     # {2,2}
       _replicate nod, a.min
     else if !a.min? or a.min <= 0         # {,5}
-      _replicate (_optional nod), a.max
+      _replicate _optional(nod), a.max
     else                                  # {3,7}
-      _sequence [ (_replicate nod, a.min), (_replicate _optional nod, a.max - a.min) ]
+      required = _replicate nod, a.min
+      optional =  _replicate _optional(nod), a.max - a.min
+      _sequence [ required, optional ]
   else
     if !a.min? or a.min == 0              # {,}
       _star nod
     else if a.min == 1                    # {1,}
       _plus nod
     else                                  # {7,}
-      _sequence [ (_replicate nod, a.min - 1), _plus nod ]
+      _sequence [ _replicate(nod, a.min - 1), _plus nod ]
 
 parselets.predicate = (e) -> node e
 
@@ -173,17 +175,14 @@ parselets.value = (e) -> node (=== e)
 parse = (exp) ->
   switch typeof! exp
     case \Object
-      for e in Object.get-own-property-names(exp)
-        if e in Object.get-own-property-names(parselets)
-          return parselets[e](exp)
+      parselets-names = Object.get-own-property-names parselets
+      for own e of exp when e in parselets-names
+        return parselets[e](exp)
       parselets.value exp
-
     case \Array
       parselets.sequence exp
-
     case \Function
       parselets.predicate exp
-
     default
       parselets.value exp
 
