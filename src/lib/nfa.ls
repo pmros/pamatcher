@@ -2,18 +2,14 @@ class NFA
   ({ @transitions, @start-state = \start, @accept-state = \accept }) ->
 
   _evaluate: (predicate, value) ~>
-    if typeof! predicate isnt \Function
-      p = (is predicate)
-    else
-      p = predicate
-
+    p = if typeof! predicate is \Function then predicate else (is predicate)
     p value
 
   _goTo: (states, value) ~>
     ret = new Set
     states.for-each (state) ~>
-      @transitions[state] .filter ( ~> @_evaluate it.1, value) .map (.0) .for-each (next-state) ->
-        ret.add next-state
+      for t in @transitions[state] when @_evaluate t.1, value
+        ret.add t.0
     ret
 
   _closure: (states) ~>
@@ -21,25 +17,22 @@ class NFA
     ret = new Set states
     while stack.length > 0
       state = stack.pop!
-      @transitions[state] .filter (.1 is null) .map (.0) .for-each (next-state) ->
+      for t in @transitions[state] when t.1 is null
+        next-state = t.0
         unless next-state in ret
           ret.add next-state
           stack.push next-state
     ret
 
   match: (arg) ~>
-    iterator = if arg[Symbol.iterator]?
-      arg[Symbol.iterator]!
-    else
-      arg
+    iterator = if arg[Symbol.iterator]? then arg[Symbol.iterator]! else arg
 
     @current-states = @_closure(new Set [@start-state])
     next = iterator.next!
 
     while not next.done
       value = next.value
-      g = @_go-to(@current-states, value)
-      @current-states = @_closure g
+      @current-states = @_closure @_go-to(@current-states, value)
       next = iterator.next!
 
     @current-states.has @accept-state
