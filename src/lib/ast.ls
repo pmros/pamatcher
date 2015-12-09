@@ -5,8 +5,8 @@ copy-transitions = (from, to) ->
     to[state] = from[state]
 
 node = (predicate) ->
-  start = Symbol 'start'
-  accept = Symbol 'accept'
+  start = Symbol \start
+  accept = Symbol \accept
   {
     startState: start
     acceptState: accept
@@ -51,8 +51,8 @@ _sequence = (args) ->
   }
 
 _or = (args) ->
-  start = Symbol 'start'
-  accept = Symbol 'accept'
+  start = Symbol \start
+  accept = Symbol \accept
 
   transitions = {}
 
@@ -72,8 +72,8 @@ _or = (args) ->
   }
 
 _optional = (a) ->
-  start = Symbol 'start'
-  accept = Symbol 'accept'
+  start = Symbol \start
+  accept = Symbol \accept
 
   transitions = {}
 
@@ -96,8 +96,8 @@ _optional = (a) ->
   }
 
 _star = (a) ->
-  start = Symbol 'start'
-  accept = Symbol 'accept'
+  start = Symbol \start
+  accept = Symbol \accept
 
   transitions = {}
 
@@ -116,7 +116,7 @@ _star = (a) ->
   }
 
 _plus = (a) ->
-  accept = Symbol 'accept'
+  accept = Symbol \accept
 
   transitions = {}
 
