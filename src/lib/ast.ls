@@ -135,14 +135,10 @@ _replicate = (exp, times) ->
 parselets = {}
 
 parselets.predicate = (exp) -> _node exp
-
-parselets.value = (exp) -> _node (=== exp)
-
-parselets.sequence = (exp) -> _sequence exp.map(parse)
-
-parselets.or = (exp) -> _or to-array(exp.or).map(parse)
-
-parselets.optional = (exp) -> _optional parse(exp.optional)
+parselets.value     = (exp) -> _node (=== exp)
+parselets.sequence  = (exp) -> _sequence exp.map(parse)
+parselets.or        = (exp) -> _or to-array(exp.or).map(parse)
+parselets.optional  = (exp) -> _optional parse(exp.optional)
 
 parselets.repeat = (exp) ->
   e = parse exp.repeat
