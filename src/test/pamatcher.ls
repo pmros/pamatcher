@@ -114,3 +114,12 @@ describe 'Pamatcher' !->
       * or: [ (> 100), (< 5) ]
     result = matcher.test [ 123 7 23 4 56 200 ]
     expect result .to-be true
+
+  test 'can match like a regex' !->
+    input = "abbbbbbc"
+    regex = /^ab*c$/
+    matcher = pamatcher do
+      * \a
+      * repeat: \b
+      * \c
+    expect matcher.test(input) .to-be regex.test(input)
