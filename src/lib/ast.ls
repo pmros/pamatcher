@@ -4,9 +4,10 @@ copy-transitions = (from, to) ->
   Object.get-own-property-symbols(from).for-each (state) ->
     to[state] = from[state]
 
-node = (predicate) ->
+_node = (predicate) ->
   start = Symbol \start
   accept = Symbol \accept
+
   {
     startState: start
     acceptState: accept
@@ -18,47 +19,46 @@ node = (predicate) ->
         ...
   }
 
-_clone = (a) ->
-  sym-map = {}
+_clone = (exp) ->
+  states-map = {}
   transitions = {}
 
-  Object.get-own-property-symbols(a.transitions).for-each (state) ->
-    sym-map[state] = Symbol state.to-string!
+  Object.get-own-property-symbols(exp.transitions).for-each (state) ->
+    states-map[state] = Symbol state.to-string!
 
-  Object.get-own-property-symbols(a.transitions).for-each (state) ->
-    transitions[sym-map[state]] = a.transitions[state].map ->
-      [ sym-map[it.0] ] ++ it.slice(1)
+  Object.get-own-property-symbols(exp.transitions).for-each (state) ->
+    transitions[states-map[state]] = exp.transitions[state].map ->
+      [ states-map[it.0], it.1 ]
 
   {
-    startState: sym-map[a.start-state]
-    acceptState: sym-map[a.accept-state]
+    startState: states-map[exp.start-state]
+    acceptState: states-map[exp.accept-state]
     transitions: transitions
   }
 
-_sequence = (args) ->
+_sequence = (exp) ->
   transitions = {}
   last-accept = null
 
-  args.for-each ->
+  exp.for-each ->
     copy-transitions it.transitions, transitions
     transitions[last-accept] = [ [ it.start-state, null ] ] if last-accept?
     last-accept := it.accept-state
 
   {
-    startState: args[0].start-state
-    acceptState: args[*-1].accept-state
+    startState: exp.0.start-state
+    acceptState: exp[*-1].accept-state
     transitions: transitions
   }
 
-_or = (args) ->
+_or = (exp) ->
   start = Symbol \start
   accept = Symbol \accept
 
   transitions = {}
-
   transitions[start] = []
 
-  args.for-each ->
+  exp.for-each ->
     copy-transitions it.transitions, transitions
     transitions[it.accept-state] = [ [ accept, null ] ]
     transitions[start].push [it.start-state, null]
@@ -71,19 +71,18 @@ _or = (args) ->
     transitions: transitions
   }
 
-_optional = (a) ->
+_optional = (exp) ->
   start = Symbol \start
   accept = Symbol \accept
 
   transitions = {}
-
-  copy-transitions a.transitions, transitions
+  copy-transitions exp.transitions, transitions
 
   transitions[start] =
-    * a.start-state, null
+    * exp.start-state, null
     * accept, null
 
-  transitions[a.accept-state] =
+  transitions[exp.accept-state] =
     * accept, null
     ...
 
@@ -95,16 +94,15 @@ _optional = (a) ->
     transitions: transitions
   }
 
-_star = (a) ->
+_star = (exp) ->
   start = Symbol \start
   accept = Symbol \accept
 
   transitions = {}
+  copy-transitions exp.transitions, transitions
 
-  copy-transitions a.transitions, transitions
-
-  transitions[start] = transitions[a.accept-state] =
-    * a.start-state, null
+  transitions[start] = transitions[exp.accept-state] =
+    * exp.start-state, null
     * accept, null
 
   transitions[accept] = []
@@ -115,75 +113,63 @@ _star = (a) ->
     transitions: transitions
   }
 
-_plus = (a) ->
+_plus = (exp) ->
   accept = Symbol \accept
 
   transitions = {}
-
-  copy-transitions a.transitions, transitions
-
-  transitions[a.accept-state].push [ a.start-state, null ] [ accept, null ]
-
+  copy-transitions exp.transitions, transitions
+  transitions[exp.accept-state].push do
+    * exp.start-state, null
+    * accept, null
   transitions[accept] = []
 
   {
-    startState: a.start-state
+    startState: exp.start-state
     acceptState: accept
     transitions: transitions
   }
 
-_replicate = (a, times) ->
-  args = [ _clone(a) for til times ]
-  _sequence args
+_replicate = (exp, times) ->
+  _sequence [ _clone exp for til times ]
 
 parselets = {}
 
-parselets.sequence = (a) ->
-  args = a.map -> parse it
-  _sequence args
+parselets.predicate = (exp) -> _node exp
 
-parselets.or = (args) ->
-  args = to-array(args.or).map -> parse it
-  _or args
+parselets.value = (exp) -> _node (=== exp)
 
-parselets.optional = (a) ->
-  _optional parse a.optional
+parselets.sequence = (exp) -> _sequence exp.map(parse)
 
-parselets.repeat = (a) ->
-  nod = parse a.repeat
-  if a.max? and a.max > 0
-    if a.min == a.max                     # {2,2}
-      _replicate nod, a.min
-    else if !a.min? or a.min <= 0         # {,5}
-      _replicate _optional(nod), a.max
-    else                                  # {3,7}
-      required = _replicate nod, a.min
-      optional =  _replicate _optional(nod), a.max - a.min
+parselets.or = (exp) -> _or to-array(exp.or).map(parse)
+
+parselets.optional = (exp) -> _optional parse(exp.optional)
+
+parselets.repeat = (exp) ->
+  e = parse exp.repeat
+  {min, max} = exp{min, max}
+  if max > 0
+    switch
+    | min == max            => _replicate e, min # {2,2}
+    | not min? or min <= 0  => _replicate _optional(e), max # {,5}
+    | _ => # {3,7}
+      required = _replicate e, min
+      optional = _replicate _optional(e), max - min
       _sequence [ required, optional ]
   else
-    if !a.min? or a.min == 0              # {,}
-      _star nod
-    else if a.min == 1                    # {1,}
-      _plus nod
-    else                                  # {7,}
-      _sequence [ _replicate(nod, a.min - 1), _plus nod ]
-
-parselets.predicate = (e) -> node e
-
-parselets.value = (e) -> node (=== e)
+    switch
+    | not min? or min == 0  => _star e # {,}
+    | min == 1              => _plus e # {1,}
+    | _ => _sequence [ _replicate(e, min - 1), _plus e ] # {7,}
 
 parse = (exp) ->
   switch typeof! exp
-    case \Object
+    | \Object =>
       parselets-names = Object.get-own-property-names parselets
       for own e of exp when e in parselets-names
         return parselets[e](exp)
       parselets.value exp
-    case \Array
-      parselets.sequence exp
-    case \Function
-      parselets.predicate exp
-    default
-      parselets.value exp
+    | \Array    => parselets.sequence exp
+    | \Function => parselets.predicate exp
+    | _         => parselets.value exp
 
 module.exports = parse
