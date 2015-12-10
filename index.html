@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="pamatcher is a pattern matching library for JavaScript iterators.">
-    <meta name="keywords" content="JavaScript, library, pattern, matching, iterators">
+    <meta name="description" content="pamatcher is a pattern matching library for JavaScript iterators that generalizes the notion of regular expression.">
+    <meta name="keywords" content="JavaScript, library, pattern, matching, iterators, iterable, regex">
     <title>pamatcher - A pattern matching library for JavaScript iterators</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-dark.css">
@@ -199,8 +199,6 @@
 
 <div class="highlight highlight-source-shell"><pre>npm install pamatcher</pre></div>
 
-<p>If you want to use pamatcher from browser, you can use <a href="http://jspm.io/">jspm</a>. Here you have a complete pamatcher demo for browser at <a href="https://gist.github.com/pmros/137ecf2351e0f2fe44d4">gist</a> (or live at <a href="http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4">bl.ocks.org</a>).</p>
-
 <p>This is an example of use:</p>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> pamatcher <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>pamatcher<span class="pl-pds">'</span></span>);
@@ -220,6 +218,8 @@
 
 <p>In the example, the pattern is simple: match a number lesser than 10, followed by zero or more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!".</p>
 <p><a href="#try">Try pamatcher!</a></p>
+
+<p>If you want to use pamatcher from browser, you can use <a href="http://jspm.io/">jspm</a>. Here you have a complete pamatcher demo for browser at <a href="https://gist.github.com/pmros/137ecf2351e0f2fe44d4">gist</a> (or live at <a href="http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4">bl.ocks.org</a>).</p>
 
 <h2>
 <a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
