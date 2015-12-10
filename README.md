@@ -1,4 +1,4 @@
-# pamatcher 
+# pamatcher
 
 [![npm version](https://badge.fury.io/js/pamatcher.svg)](http://badge.fury.io/js/pamatcher)
 [![Build Status](https://travis-ci.org/pmros/pamatcher.svg)](https://travis-ci.org/pmros/pamatcher)
@@ -18,15 +18,18 @@ This is an example of use:
 ```js
 var pamatcher = require('pamatcher');
 
+var input = [1, 4, 8, 44, 55];
+
 var matcher = pamatcher(
   (i) => i < 10,
-  { repeat: (i) => i%2==0 },
+  { repeat: (i) => i%2==0, name: 'mycatch' },
   (i) => i > 10
 );
 
-var result = matcher.test([1, 4, 8, 44, 55]);
-if(result) {
+var result = matcher.exec(input);
+if(result.test) {
   console.log("Pattern matches!");
+  console.log("Captured values: " + result.captures['mycatch'].join(','));
 } else {
   console.log("Pattern doesn't match.");
 }
@@ -47,27 +50,27 @@ A pattern expression is a JavaScript object that specify the pattern you want to
 #### [function]
 A predicate, that is a function that takes an input item, evaluates it and return a boolean. True means "item accepted".
 
-#### { value: [whatever] }
+#### { value: [whatever], name: [string] }
 This is a shortcut for a (deep) equality predicate.
 
-#### { sequence: [array of expressions] }
+#### { sequence: [array of expressions], name: [string]  }
 A sequence of expressions.
 It's something like this regex:  /abc/
 Usually pamatcher can convert arrays of expressions to a sequence expression for a better readability. Also pamatcher function can automatically convert any number of arguments to a sequence expression (see example above).
 
-#### { or: [array of expressions] }
+#### { or: [array of expressions], name: [string]  }
 Logical or of multiple expressions.
 It's something like this regex:  /(a|b|c)/
 
-#### { optional: [expression] }
+#### { optional: [expression], name: [string]  }
 An optional expression.
 It's something like this regex:  /a?/
 
-#### { repeat: [expression] }
+#### { repeat: [expression], name: [string]  }
 A sequence of zero or more expressions repeated.
 It's something like this regex:  /a*/
 
-#### { repeat: [expression], min: [int], max: [int] }
+#### { repeat: [expression], min: [int], max: [int], name: [string]  }
 A sequence from two up to five expressions repeated.
 It's something like this regex: /a{2,5}/
 
@@ -79,12 +82,17 @@ The input is an iterator or an iterable. These are ES6 features. Array, String, 
 
 test method returns true if your pattern expression matchs your input, otherwise it returns false.
 
+#### matcher.match(input)
+matcher method returns an object that contains captured values of each named group
+
+#### matcher.exec(input)
+exec method returns an object that contains test boolean value and captured values of each named group
 
 ## TODO
 - [x] Pattern expressions.
 - [x] Browser suport.
 - [x] Cardinality for repeat pattern.
+- [x] Capturing groups.
 - [ ] Simple expressions using strings like traditional regular expressions.
 - [ ] Error handling.
-- [ ] Capturing groups.
 - [ ] More information avaible for predicates (index, previous item...).

@@ -1,15 +1,20 @@
 class NFA
   ({ @transitions, @start-state = \start, @accept-state = \accept }) ->
+    @captures = {}
 
   _evaluate: (predicate, value) ~>
     p = if typeof! predicate is \Function then predicate else (is predicate)
     p value
 
-  _goTo: (states, value) ~>
+  _go-to: (states, value) ~>
     ret = new Set
     states.for-each (state) ~>
-      for t in @transitions[state] when @_evaluate t.1, value
-        ret.add t.0
+      for t in @transitions[state]
+        if @_evaluate t.predicate, value
+          ret.add t.next-state
+          if t.capture-group? and Array.is-array t.capture-group
+            for group in t.capture-group
+              @captures[group]buffer.push value
     ret
 
   _closure: (states) ~>
@@ -17,17 +22,23 @@ class NFA
     ret = new Set states
     while stack.length > 0
       state = stack.pop!
-      for t in @transitions[state] when t.1 is null
-        next-state = t.0
-        unless next-state in ret
-          ret.add next-state
-          stack.push next-state
+      for t in @transitions[state]
+        if t.start-group?
+          @captures[t.start-group] = buffer: [], values: []
+        if t.end-group?
+          for value in @captures[t.end-group]buffer
+            @captures[t.end-group]values.push value
+          @captures[t.end-group]buffer = []
+        if not t.predicate? and t.next-state not in ret
+          ret.add t.next-state
+          stack.push t.next-state
     ret
 
   match: (arg) ~>
     iterator = if arg[Symbol.iterator]? then arg[Symbol.iterator]! else arg
 
     @current-states = @_closure(new Set [@start-state])
+
     next = iterator.next!
 
     while not next.done
@@ -35,6 +46,9 @@ class NFA
       @current-states = @_closure @_go-to(@current-states, value)
       next = iterator.next!
 
-    @current-states.has @accept-state
+    {
+      test: @current-states.has @accept-state
+      captures: { [name, capture.values] for name, capture of @captures }
+    }
 
 module.exports = NFA

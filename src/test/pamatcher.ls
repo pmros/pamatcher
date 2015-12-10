@@ -3,7 +3,7 @@ require! '../lib/pamatcher'
 test = it
 describe 'Pamatcher' !->
   test 'can match a one item sequence' !->
-    matcher = pamatcher (< 10)
+    matcher = pamatcher predicate: (< 10)
     result = matcher.test [ 1 ]
     expect result .to-be true
 
@@ -123,3 +123,54 @@ describe 'Pamatcher' !->
       * repeat: \b
       * \c
     expect matcher.test(input) .to-be regex.test(input)
+
+  test 'can match named group on a predicate expression' !->
+    input = [ 2 ]
+    matcher = pamatcher { predicate: (<10), name: \catched }
+    expect matcher.match(input).catched .to-equal [ 2 ]
+
+  test 'can match a named group on a repeat expression' !->
+    input = [ 1 23 43 13 2 ]
+    matcher = pamatcher do
+      * (<10)
+      * repeat: (>10), name: \catched
+      * (<5)
+    expect matcher.match(input).catched .to-equal [ 23 43 13 ]
+
+  test 'can match two named groups on a repeat expressions' !->
+    input = [ 1 3 5 15 13 2 ]
+    matcher = pamatcher do
+      * repeat: (<10), name: \first
+      * repeat: (>10), name: \second
+      * (<5)
+    {first, second} = matcher.match(input)
+    expect first .to-equal [ 1 3 5 ]
+    expect second .to-equal [ 15 13 ]
+
+  test 'can match a named group on a sequence expression' !->
+    input = [ 2 100 3 ]
+    matcher = pamatcher do
+      * sequence: [(<10), (>10)], name: \catched
+      * (<5)
+    expect matcher.match(input).catched .to-equal [ 2 100 ]
+
+  test 'can match a named group on a or expression' !->
+    input = [ 23 6 ]
+    matcher = pamatcher do
+      * or: [(<5), (>10)], name: \catched
+      * (isnt 0)
+    expect matcher.match(input).catched .to-equal [ 23 ]
+
+  test 'can match a named group on a optional expression' !->
+    input = [ 2 6 ]
+    matcher = pamatcher do
+      * optional: (<5), name: \catched
+      * (isnt 0)
+    expect matcher.match(input).catched .to-equal [ 2 ]
+
+  test 'can match a named group on a repeated expression (one or more)' !->
+    input = [ 2 1 3 6 ]
+    matcher = pamatcher do
+      * repeat: (<5), min: 1, name: \catched
+      * (isnt 0)
+    expect matcher.match(input).catched .to-equal [ 2 1 3 ]
