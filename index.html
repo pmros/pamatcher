@@ -12,6 +12,7 @@
     <title>pamatcher - A pattern matching library for JavaScript iterators</title>
 
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.7.0/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.7.0/theme/base16-dark.min.css">
     <link rel="stylesheet" href="stylesheets/styles.css">
@@ -129,8 +130,33 @@
               </div>
             </fieldset>
 
+            <label for='input'>Input</label>
+            <textarea rows='4' id='input'>[1, 4, 8, 44, 55]</textarea>
+          </fieldset>
+          <button id='test' type='submit' class="remodal-confirm">Test</button>
+          <div id='result'>
+            <div id='ok'><i class="fa fa-check-circle"></i> Pattern matches!</div>
+            <div id='fail'><i class="fa fa-ban"></i> Pattern doesn't match.</div>
+          </div>
+        </form>
+      </div>
+
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/pmros/pamatcher">View On GitHub</a></li>
+          <li class="downloads" id="try-buttom"><a href="#try">Try pamatcher!</a></li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>pamatcher</h1>
+          <p>A pattern matching library for JavaScript iterators</p>
         </div>
       </div>
+
 
       <div id="main">
         <h2>Overview</h2>
@@ -211,6 +237,7 @@ if(result) {
         <a id="matcher-object" class="anchor" href="#matcher-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>matcher object</h3>
 
         <p>A matcher object can check if your expression matches to an input.</p>
+
 
         <h4>
         <a id="matchertestinput" class="anchor" href="#matchertestinput" aria-hidden="true"><span class="octicon octicon-link"></span></a>matcher.test(input)</h4>
