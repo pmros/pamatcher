@@ -1,162 +1,200 @@
-      @font-face {
-        font-family: 'OpenSansRegular';
-        src: url("../fonts/OpenSans-Regular-webfont.eot");
-        src: url("../fonts/OpenSans-Regular-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/OpenSans-Regular-webfont.woff") format("woff"), url("../fonts/OpenSans-Regular-webfont.ttf") format("truetype"), url("../fonts/OpenSans-Regular-webfont.svg#OpenSansRegular") format("svg");
-        font-weight: normal;
-        font-style: normal;
-        -webkit-font-smoothing: antialiased;
-      }
-      h2 {
-          font-size: 24px;
-      }
+@media only screen and (max-device-width: 480px) {
+  #container {
+    width: 90% !important;
+  }
+  #sidebar {
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+  }
+  #try {
+    display: none !important;
+  }
+  #main {
+    width: 100% !important;
+  }
+}
 
-      h1, h2 {
-        color: #D28445;
-      }
+@font-face {
+  font-family: 'OpenSansRegular';
+  src: url("../fonts/OpenSans-Regular-webfont.eot");
+  mobile fixed sidebar one-columnsrc: url("../fonts/OpenSans-Regular-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/OpenSans-Regular-webfont.woff") format("woff"), url("../fonts/OpenSans-Regular-webfont.ttf") format("truetype"), url("../fonts/OpenSans-Regular-webfont.svg#OpenSansRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+}
 
-      h3, h4, h5, h6 {
-        color: #F4BF75;
-      }
+h2 {
+  font-size: 24px;
+}
 
-      h1, h2, h3, h4, h5, h6 {
-        margin: 0px 0px 10px;
-        font-family: "OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
-      }
-      h1, h2, h3 {
-        letter-spacing: 2px;
+h1, h2 {
+  color: #D28445;
+}
 
-      }
-      body {
+h3, h4, h5, h6 {
+  color: #F4BF75;
+}
 
-        font: 14px/1.5 "OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
-        color: #F0E7D5;
+h1, h2, h3, h4, h5, h6 {
+  margin: 0px 0px 10px;
+  font-family: "OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
 
-        background-attachment: fixed !important;
-        background-color: transparent;
-        background-image: linear-gradient(#2A2A29, #1C1C1C);
-        background-repeat: repeat;
-        background-position: 0% 0%;
-        background-clip: border-box;
-        background-origin: padding-box;
-        background-size: auto auto;
+h1, h2, h3 {
+  letter-spacing: 2px;
+}
 
-      }
-      #container {
-        margin: 0 auto;
-        width: 950px;
-      }
+body {
+  font: 14px/1.5 "OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #F0E7D5;
+  background-attachment: fixed !important;
+  background-color: transparent;
+  background-image: linear-gradient(#2A2A29, #1C1C1C);
+  background-repeat: repeat;
+  background-position: 0% 0%;
+  background-clip: border-box;
+  background-origin: padding-box;
+  background-size: auto auto;
+}
 
-      #sidebar {
-        width: 260px;
-        float: left;
-        position: fixed;
-        margin-right: 40px;
-        text-align: center;
-      }
+#container {
+  margin: 0 auto;
+  width: 950px;
+}
 
-      #try {
-        margin-top: 25px;
-        display: none;
-      }
+#sidebar {
+  width: 260px;
+  float: left;
+  position: fixed;
+  margin-right: 40px;
+  text-align: center;
+}
 
-      #input, #pattern, #result {
-        float: left;
-        width: 100%;
-        margin-bottom: 10px;
-      }
-      #main {
-        width: 650px;
-        float: right;
-      }
+#try {
+  margin-top: 25px;
+  display: none;
+}
 
-      #logo {
-        width: 200px;
-      }
+#input, #pattern, #result {
+  float: left;
+  width: 100%;
+  margin-bottom: 10px;
+}
 
-      a {
-        text-decoration: none;
-        color: #FBCD26;
-      }
-      a:hover {
-        color: #fbc801;
-        text-shadow: 0px 0px 1px #FBE284;
-      }
-      ul {
-        list-style: none;
-        padding-left: 20px;
-      }
+#main {
+  width: 650px;
+  float: right;
+}
 
-      label {
-        float: left;
-        font-size: smaller;
-        color: gray;
-      }
-      textarea {
-        float: left;
-        clear: both;
-        width: 100%;
-        margin: 0px 0px 5px;
-        padding: 0px;
-        border: 0px none;
-      }
-      button {
-        float: left;
-        width: 100%;
-        margin-top: 5px;
-        height: 40px;
-        margin-bottom: 10px;
-        background-color: #3C66E2;
-        border: 0;
-        font-size: 18px;
-        text-transform: uppercase;
-        border: 3px solid #002346;
-        letter-spacing: 4px;
-        font-weight: bolder;
-      }
-      button:hover {
+#logo {
+  width: 200px;
+}
 
-        color: #fbc801;
-        text-shadow: 0px 0px 1px #FBE284;
-      }
-      fieldset {
-        border: 0px;
-        margin: 0px;
-        padding: 0px;
-      }
-      .CodeMirror {
-        float: left;
-        clear: both;
-        width: 100%;
-        text-align: left;
-        height: auto;
+a {
+  text-decoration: none;
+  color: #FBCD26;
+}
 
-        background: #191919 none repeat scroll 0% 0%;
-        border-radius: 2px;
-        border: 1px solid #121212;
-        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3) inset;
-        overflow-y: hidden;
-      }
+a:hover {
+  color: #fbc801;
+  text-shadow: 0px 0px 1px #FBE284;
+}
 
-      #input .CodeMirror {
-        height: 5em;
-        width: 260px;
-      }
+ul {
+  list-style: none;
+  padding-left: 20px;
+}
 
-      #pattern .CodeMirror {
-        height: 10em;
-        width: 260px;
-      }
+label {
+  float: left;
+  font-size: smaller;
+  color: gray;
+}
 
-      #result .CodeMirror {
-        height: 5em;
-        width: 260px;
-      }
+textarea {
+  float: left;
+  clear: both;
+  width: 100%;
+  margin: 0px 0px 5px;
+  padding: 8px 15px;
+  border: 0px none;
+  background: #151515;
+  color: #e0e0e0;
+  height: auto;
+}
 
-      #main .CodeMirror-lines {
-        margin: 8px 15px;
-      }
-      #main .CodeMirror {
-        margin-bottom: 20px;
-      }
+button {
+  float: left;
+  width: 100%;
+  margin-top: 5px;
+  height: 40px;
+  margin-bottom: 10px;
+  background-color: #3C66E2;
+  border: 0;
+  font-size: 18px;
+  text-transform: uppercase;
+  border: 3px solid #002346;
+  letter-spacing: 4px;
+  font-weight: bolder;
+  color: white;
+}
 
-      .github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}
+button:hover {
+  color: #fbc801;
+  text-shadow: 0px 0px 1px #FBE284;
+}
+
+fieldset {
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.CodeMirror {
+  float: left;
+  clear: both;
+  width: 100%;
+  text-align: left;
+  height: auto;
+  background: #191919 none repeat scroll 0% 0%;
+  border-radius: 2px;
+  border: 1px solid #121212;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3) inset;
+  overflow-y: hidden;
+}
+
+#input .CodeMirror {
+  height: 5em;
+  width: 260px;
+}
+
+#pattern .CodeMirror {
+  height: 10em;
+  width: 260px;
+}
+
+#result .CodeMirror {
+  height: 5em;
+  width: 260px;
+}
+
+#main .CodeMirror-lines {
+  margin: 8px 15px;
+}
+#main .CodeMirror {
+  margin-bottom: 20px;
+}
+
+.github-corner:hover .octo-arm{
+  animation:octocat-wave 560ms ease-in-out
+}
+
+@keyframes octocat-wave{
+  0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}
+}
+
+@media (max-width:500px){
+  .github-corner:hover .octo-arm{animation:none}
+  .github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}
+}

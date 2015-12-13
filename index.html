@@ -23,6 +23,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.7.0/mode/javascript/javascript.min.js"></script>
     <script>
     $(function() {
+      if(screen.width <= 480) {
+        $(window).scroll(function() {
+          if ($(this).scrollTop()>0) {
+              $('.github-corner').hide();
+           } else {
+            $('.github-corner').show();
+           }
+         });
+     }
       System.import('npm:pamatcher').then(function(pamatcher) {
         $("#try").show();
 
@@ -222,13 +231,13 @@ if(result) {
         <p>test method returns true if your pattern expression matchs your input, otherwise it returns false.</p>
         <h2>TODO</h2>
         <ul>
-          <li><i class="icon-check"></i> Pattern expressions.</li>
-          <li><i class="icon-check"></i> Browser suport.</li>
-          <li><i class="icon-check"></i> Cardinality for repeat pattern.</li>
-          <li><i class="icon-check-empty"></i> Capturing groups.</li>
-          <li><i class="icon-check-empty"></i> Simple expressions using strings like traditional regular expressions.</li>
-          <li><i class="icon-check-empty"></i> Error handling.</li>
-          <li><i class="icon-check-empty"></i> More information avaible for predicates (index, previous item...).</li>
+          <li><i class="icon-check"></i> Pattern expressions</li>
+          <li><i class="icon-check"></i> Browser suport</li>
+          <li><i class="icon-check"></i> Cardinality for repeat pattern</li>
+          <li><i class="icon-check-empty"></i> Capturing groups</li>
+          <li><i class="icon-check-empty"></i> Simple expressions using strings like traditional regular expressions</li>
+          <li><i class="icon-check-empty"></i> Error handling</li>
+          <li><i class="icon-check-empty"></i> More information avaible for predicates (index, previous item...)</li>
         </ul>
       </div>
     </div>
