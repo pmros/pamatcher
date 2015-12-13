@@ -200,7 +200,7 @@ if(result) {
         Usually pamatcher can convert arrays of expressions to a sequence expression for a better readability. Also pamatcher function can automatically convert any number of arguments to a sequence expression (see example above).</p>
 
         <h4>
-        <a id="-or-expressions-or-array-of-expressions-" class="anchor" href="#-or-expressions-or-array-of-expressions-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ or: [expressions or array of expressions] }</h4>
+        <a id="-or-expressions-or-array-of-expressions-" class="anchor" href="#-or-expressions-or-array-of-expressions-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ or: [array of expressions] }</h4>
 
         <p>Logical or of multiple expressions.
         It's something like this regex:  /(a|b|c)/</p>
@@ -216,6 +216,13 @@ if(result) {
 
         <p>A sequence of zero or more expressions repeated.
         It's something like this regex:  /a*/</p>
+
+        <h4>
+        <a id="-repeat-expression-" class="anchor" href="#-repeat-expression-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ repeat: [expression], min: [int], max: [int] }
+        </h4>
+
+        <p>A sequence from two up to five expressions repeated.
+        It's something like this regex: /a{2,5}/</p>
 
         <h3>
         <a id="matcher-object" class="anchor" href="#matcher-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>matcher object</h3>
