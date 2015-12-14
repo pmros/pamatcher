@@ -23,65 +23,76 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.7.0/mode/javascript/javascript.min.js"></script>
     <script>
     $(function() {
-      if(screen.width <= 480) {
-        $(window).scroll(function() {
-          if ($(this).scrollTop()>0) {
-              $('.github-corner').hide();
-           } else {
-            $('.github-corner').show();
-           }
-         });
-     }
-      System.import('npm:pamatcher').then(function(pamatcher) {
-        $("#try").show();
-
       $("#main textarea.code.readonly").each(function() {
         CodeMirror.fromTextArea(this, {
           readOnly: true,
+          mode: "javascript",
           theme: "base16-dark"
         });
       });
 
-      var inputEditor = CodeMirror.fromTextArea($("#input-area")[0], {
-        mode: "javascript",
-        theme: "base16-dark"
-      });
-
-      var patternEditor = CodeMirror.fromTextArea($("#pattern-area")[0], {
-        mode: "javascript",
-        theme: "base16-dark"
-      });
-
-      var resultEditor = CodeMirror.fromTextArea($("#result-area")[0], {
-        readOnly: true,
-        theme: "base16-dark"
-      });
-
-      inputEditor.on("change", function() {
-        resultEditor.getDoc().setValue('');
-      });
-
-      patternEditor.on("change", function() {
-        resultEditor.getDoc().setValue('');
-      });
-
-        console.log("pamatcher");
-        $("#test").click((e) => {
-          console.log("click!");
-
-          var pattern = eval(patternEditor.getValue());
-          var input = eval(inputEditor.getValue());
-
-          var matcher = pamatcher(pattern);
-          var result = matcher.test(input);
-
-          if(result) {
-              resultEditor.getDoc().setValue('Pattern matches!');
-          } else {
-              resultEditor.getDoc().setValue("Pattern doesn't match.");
-          }
+      $("#main textarea.shell.readonly").each(function() {
+        CodeMirror.fromTextArea(this, {
+          readOnly: true,
+          mode: "shell",
+          theme: "base16-dark"
         });
-    });
+      });
+
+      if(screen.width < 950) {
+        $(window).scroll(function() {
+          if ($(this).scrollTop()>0) {
+            $('.github-corner').hide();
+           } else {
+            $('.github-corner').show();
+           }
+         });
+     } else {
+       System.import('npm:pamatcher').then(function(pamatcher) {
+          var inputEditor = CodeMirror.fromTextArea($("#input-area")[0], {
+            mode: "javascript",
+            theme: "base16-dark"
+          });
+
+          var patternEditor = CodeMirror.fromTextArea($("#pattern-area")[0], {
+            mode: "javascript",
+            theme: "base16-dark"
+          });
+
+          var resultEditor = CodeMirror.fromTextArea($("#result-area")[0], {
+            readOnly: true,
+            mode: null,
+            theme: "base16-dark"
+          });
+
+          inputEditor.on("change", function() {
+            resultEditor.getDoc().setValue('');
+          });
+
+          patternEditor.on("change", function() {
+            resultEditor.getDoc().setValue('');
+          });
+
+          $("#test").click((e) => {
+            var pattern = eval(patternEditor.getValue());
+            var input = eval(inputEditor.getValue());
+
+            var matcher = pamatcher(pattern);
+            var result = matcher.test(input);
+
+            if(result) {
+                resultEditor.getDoc().setValue('Pattern matches!');
+            } else {
+                resultEditor.getDoc().setValue("Pattern doesn't match.");
+            }
+          }); // click #test
+
+          $("#try").show();
+          
+          patternEditor.refresh();
+          inputEditor.refresh();
+      }); // import pamatcher
+    } // resolution
     });
     </script>
     <script>
@@ -149,7 +160,7 @@
         </p>
         <h2>Installation and usage</h2>
         <p>You can install pamatcher using npm:</p>
-        <textarea class="code readonly auto">npm install pamatcher</textarea>
+        <textarea class="shell readonly auto">npm install pamatcher</textarea>
         <p>This is an example of use:</p>
         <textarea class="code readonly auto">
 var pamatcher = require('pamatcher');
