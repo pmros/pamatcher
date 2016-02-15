@@ -78,17 +78,23 @@
             var input = eval(inputEditor.getValue());
 
             var matcher = pamatcher(pattern);
-            var result = matcher.test(input);
+            var result = matcher.exec(input);
+            var output = '';
 
-            if(result) {
-                resultEditor.getDoc().setValue('Pattern matches!');
+            if(result.test) {
+                output = 'Pattern matches!';
+                for(c in result.captures) {
+                  output += "\r\n";
+                  output += c + ": " + result.captures[c] + "\r\n";
+                }
             } else {
-                resultEditor.getDoc().setValue("Pattern doesn't match.");
+                output = "Pattern doesn't match.";
             }
+            resultEditor.getDoc().setValue(output);
           }); // click #test
 
           $("#try").show();
-          
+
           patternEditor.refresh();
           inputEditor.refresh();
       }); // import pamatcher
@@ -136,7 +142,7 @@
                 <label for='pattern'>Pattern</label>
                 <textarea class="code js" rows='4' id='pattern-area'>[
   (i) => i < 10,
-  { repeat: (i) => i%2==0 },
+  { repeat: (i) => i%2==0, name: 'mycatch' },
   (i) => i > 10
 ]</textarea>
               </div>
@@ -167,13 +173,14 @@ var pamatcher = require('pamatcher');
 
 var matcher = pamatcher(
   (i) => i < 10,
-  { repeat: (i) => i%2==0 },
+  { repeat: (i) => i%2==0, name: 'mycatch' },
   (i) => i > 10
 );
 
-var result = matcher.test([1, 4, 8, 44, 55]);
-if(result) {
+var result = matcher.exec(input);
+if(result.test) {
   console.log("Pattern matches!");
+  console.log("Captured values: " + result.captures['mycatch'].join(','));
 } else {
   console.log("Pattern doesn't match.");
 }</textarea>
@@ -245,14 +252,20 @@ if(result) {
         <a id="matchertestinput" class="anchor" href="#matchertestinput" aria-hidden="true"><span class="octicon octicon-link"></span></a>matcher.test(input)</h4>
 
         <p>The input is an iterator or an iterable. These are ES6 features. Array, String, Map, Set are iterables.</p>
-
         <p>test method returns true if your pattern expression matchs your input, otherwise it returns false.</p>
+
+        <h4>matcher.match(input)</h4>
+        <p>matcher method returns an object that contains captured values of each named group.</p>
+
+        <h4>matcher.exec(input)</h4>
+        <p>exec method returns an object that contains test boolean value and captured values of each named group.</p>
+
         <h2>TODO</h2>
         <ul>
           <li><i class="icon-check"></i> Pattern expressions</li>
           <li><i class="icon-check"></i> Browser suport</li>
           <li><i class="icon-check"></i> Cardinality for repeat pattern</li>
-          <li><i class="icon-check-empty"></i> Capturing groups</li>
+          <li><i class="icon-check"></i> Capturing groups</li>
           <li><i class="icon-check-empty"></i> Simple expressions using strings like traditional regular expressions</li>
           <li><i class="icon-check-empty"></i> Error handling</li>
           <li><i class="icon-check-empty"></i> More information avaible for predicates (index, previous item...)</li>
