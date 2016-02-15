@@ -85,7 +85,7 @@
                 output = 'Pattern matches!';
                 for(c in result.captures) {
                   output += "\r\n";
-                  output += c + ": " + result.captures[c] + "\r\n";
+                  output += c + ": " + result.captures[c];
                 }
             } else {
                 output = "Pattern doesn't match.";
