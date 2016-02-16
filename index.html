@@ -186,72 +186,63 @@ if(result.test) {
   console.log("Pattern doesn't match.");
 }</textarea>
 
-        <p>
-        In the example, the pattern is simple: match a number lesser than 10, followed by zero or more even numbers and finally a number greater than 10. You test an array and it should print "Pattern matches!".
-        </p>
+        <p>In the example, the pattern is simple: match a number lesser than 10, 
+        followed by zero or more even numbers and finally a number greater than 10. 
+        You test an array and it should print "Pattern matches!".</p>
 
-<p>If you want to use pamatcher from browser, you can use <a href="http://jspm.io/">jspm</a>. Here you have a complete pamatcher demo for browser at <a href="https://gist.github.com/pmros/137ecf2351e0f2fe44d4">gist</a> (or live at <a href="http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4">bl.ocks.org</a>).</p>
-        <h2>
-        <a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
+        <p>If you want to use pamatcher from browser, you can use <a href="http://jspm.io/">jspm</a>. 
+        Here you have a complete pamatcher demo for browser at <a href="https://gist.github.com/pmros/137ecf2351e0f2fe44d4">gist</a> 
+        (or live at <a href="http://bl.ocks.org/pmros/137ecf2351e0f2fe44d4">bl.ocks.org</a>).</p>
+        
+        <h2>API</h2>
 
-        <h3>
-        <a id="pamatcherexpression" class="anchor" href="#pamatcherexpression" aria-hidden="true"><span class="octicon octicon-link"></span></a>pamatcher(expression)</h3>
+        <h3>pamatcher(expression)</h3>
 
-        <p>This is a function that transforms a pattern expression into a <a href="#matcher-object">matcher</a>. This is the only thing you need to import/require to use pamatcher library.</p>
+        <p>This is a function that transforms a pattern expression into a <a href="#matcher-object">matcher</a>. 
+        This is the only thing you need to import/require to use pamatcher library.</p>
 
-        <p>A pattern expression is a JavaScript object that specify the pattern you want to use. A pattern expression can be:</p>
+        <p>A pattern expression is a JavaScript object that specify the pattern you want to use. 
+        You can add <strong>name</strong> property to any pattern expreession in order to capture a <strong>group</strong>.</p> 
+        <p>A pattern expression can be:</p>
 
-        <h4>
-        <a id="function" class="anchor" href="#function" aria-hidden="true"><span class="octicon octicon-link"></span></a>[function]</h4>
+        <h4>{ predicate: [function] }</h4>
+        <h4>[function]</h4>
+        <p>A is a function that takes an input item, evaluates it and return a boolean. True means "item accepted".</p>
+        <p>If you pass a function as pattern expression, pamatcher will convert it to a predicate pattern expression for you.</p>
 
-        <p>A predicate, that is a function that takes an input item, evaluates it and return a boolean. True means "item accepted".</p>
-
-        <h4>
-        <a id="-value-whatever-" class="anchor" href="#-value-whatever-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ value: [whatever] }</h4>
-
+        <h4>{ value: [whatever] }</h4>
+        <h4>[whatever]</h4>
         <p>This is a shortcut for a (deep) equality predicate.</p>
-
-        <h4>
-        <a id="-sequence-array-of-expressions-" class="anchor" href="#-sequence-array-of-expressions-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ sequence: [array of expressions] }</h4>
-
+        <p>If you pass a value as pattern expression and that value is not an object that looks like a pattern expression,
+        a function or an array, then pamatcher will convert it to a value pattern expression for you.</p>
+        
+        <h4>{ sequence: [array of expressions] }</h4>
+        <h4>[array of expressions]</h4>
         <p>A sequence of expressions.
-        It's something like this regex:  /abc/
-        Usually pamatcher can convert arrays of expressions to a sequence expression for a better readability. Also pamatcher function can automatically convert any number of arguments to a sequence expression (see example above).</p>
+        It's something like this regex:  /abc/</p>
+        <p>If you pass an array as pattern expression, pamatcher will convert it to a sequence pattern expression for you.</p>
+        <p>In adition, pamatcher function can automatically convert any number of arguments to a sequence expression (see example above).</p>
 
-        <h4>
-        <a id="-or-expressions-or-array-of-expressions-" class="anchor" href="#-or-expressions-or-array-of-expressions-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ or: [array of expressions] }</h4>
-
+        <h4>{ or: [array of expressions] }</h4>
         <p>Logical or of multiple expressions.
         It's something like this regex:  /(a|b|c)/</p>
 
-        <h4>
-        <a id="-optional-expression-" class="anchor" href="#-optional-expression-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ optional: [expression] }</h4>
-
+        <h4>{ optional: [expression] }</h4>
         <p>An optional expression.
         It's something like this regex:  /a?/</p>
 
-        <h4>
-        <a id="-repeat-expression-" class="anchor" href="#-repeat-expression-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ repeat: [expression] }</h4>
-
+        <h4>{ repeat: [expression] }</h4>
         <p>A sequence of zero or more expressions repeated.
         It's something like this regex:  /a*/</p>
 
-        <h4>
-        <a id="-repeat-expression-" class="anchor" href="#-repeat-expression-" aria-hidden="true"><span class="octicon octicon-link"></span></a>{ repeat: [expression], min: [int], max: [int] }
-        </h4>
-
-        <p>A sequence from two up to five expressions repeated.
+        <h4>{ repeat: [expression], min: [int], max: [int] }</h4>
+        <p>A sequence from <i>min</i> up to <i>max</i> expressions repeated. min and max are optional.
         It's something like this regex: /a{2,5}/</p>
 
-        <h3>
-        <a id="matcher-object" class="anchor" href="#matcher-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>matcher object</h3>
+        <h3 id="matcher-object">matcher object</h3>
+        <p>A matcher object can check if your expression matches to an input and capture named groups.</p>
 
-        <p>A matcher object can check if your expression matches to an input.</p>
-
-
-        <h4>
-        <a id="matchertestinput" class="anchor" href="#matchertestinput" aria-hidden="true"><span class="octicon octicon-link"></span></a>matcher.test(input)</h4>
-
+        <h4>matcher.test(input)</h4>
         <p>The input is an iterator or an iterable. These are ES6 features. Array, String, Map, Set are iterables.</p>
         <p>test method returns true if your pattern expression matchs your input, otherwise it returns false.</p>
 
@@ -259,7 +250,11 @@ if(result.test) {
         <p>matcher method returns an object that contains captured values of each named group.</p>
 
         <h4>matcher.exec(input)</h4>
-        <p>exec method returns an object that contains test boolean value and captured values of each named group.</p>
+        <p>exec method returns an object that contains two properties:</p>
+        <ul>
+          <li><strong>test</strong>: [boolean] true if your pattern expression matchs your input, otherwise it returns false.</li>
+          <li><strong>captures</strong>: [object] captured values of each named group.</li>
+        </ul>
 
         <h2>TODO</h2>
         <ul>
