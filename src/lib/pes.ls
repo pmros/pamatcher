@@ -30,144 +30,157 @@ string        = terminal \STRING /\'[^']*\'/
 
 S = non-terminal \S
 ITEM = non-terminal \ITEM
-ATOM = non-terminal \ATOM
-CARDINALITY = non-terminal \CARDINALITY
+ITEMS = non-terminal \ITEMS
+ITEMSB = non-terminal \ITEMSB
+PREDICATE = non-terminal \PREDICATE
+SEQ = non-terminal \SEQ
+OR = non-terminal \OR
+QTY = non-terminal \QTY
 
-empty = new k.data.Symbol name: k.data.specialSymbol.EMPTY
 
 pes-grammar = (predicates) ->
   grammar do
     * rule \S1,
         head: \S
-        tail: [ S, ATOM ]
-        reduce: ->
-          [init, last] = it.values
-          sequence = if init.sequence?
-            init.sequence ++ last
-          else
-            [init, last]
-          { sequence }
-      rule \S2,
-        head: \S
-        tail: [ ATOM ]
+        tail: [ ITEMS ]
         reduce: -> it.values.0
-      rule \S3,
-        head: \S
-        tail: [ S, pipe, ATOM ]
-        reduce: ->
-          [init, _, last] = it.values
-          expression = if init.or?
-            init.or ++ last
-          else
-            [init, last]
-          { or: expression }
-
-      rule \ATOM1,
-        head: \ATOM
-        tail: [ ITEM ]
-        reduce: -> it.values.0
-      rule \ATOM2,
-        head: \ATOM
-        tail: [ parens-open, id, colon, S, parens-close, CARDINALITY ]
-        reduce: -> it.values.3 <<< {name: it.values.1 }
-      rule \ATOM3,
-        head: \ATOM
-        tail: [ parens-open, S, parens-close, CARDINALITY ]
-        reduce: -> it.values.1
 
       rule \ITEM1,
         head: \ITEM
-        tail: [ id, CARDINALITY ]
-        reduce: -> { repeat: predicates[it.values.0] } <<< it.values.1
+        tail: [ parens-open, ITEMS, parens-close ]
+        reduce: -> it.values.1
       rule \ITEM2,
         head: \ITEM
-        tail: [ underscore, CARDINALITY ]
-        reduce: -> { repeat: -> true } <<< it.values.1
+        tail: [ parens-open, ITEMS, parens-close, QTY ]
+        reduce: -> { repeat: it.values.1} <<< it.values.3
       rule \ITEM3,
         head: \ITEM
-        tail: [ exclamation, id, CARDINALITY ]
-        reduce: ->
-          [ _, id, cardinality ] = it.values
-          { repeat: -> not predicates[id](it) } <<< cardinality
+        tail: [ parens-open, id, colon, ITEMS, parens-close ]
+        reduce: -> it.values.3 <<< {name: it.values.1}
       rule \ITEM4,
         head: \ITEM
-        tail: [ number, CARDINALITY ]
-        reduce: -> { repeat: Number(it.values.0) } <<< it.values.1
+        tail: [ parens-open, id, colon, ITEMS, parens-close, QTY ]
+        reduce: ->
+          { repeat: it.values.3} <<< {name: it.values.1} <<< it.values.5
+
       rule \ITEM5,
         head: \ITEM
-        tail: [ exclamation, number, CARDINALITY ]
-        reduce: ->
-          [ _, number, cardinality ] = it.values
-          { repeat: (!= Number(number)) } <<< cardinality
+        tail: [ PREDICATE ]
+        reduce: -> { predicate: it.values.0 }
       rule \ITEM6,
         head: \ITEM
-        tail: [ greater, number, CARDINALITY ]
-        reduce: ->
-          [ _, number, cardinality ] = it.values
-          { repeat: (> Number(number)) } <<< cardinality
-      rule \ITEM7,
-        head: \ITEM
-        tail: [ greater-equal, number, CARDINALITY ]
-        reduce: ->
-          [ _, number, cardinality ] = it.values
-          { repeat: (>= Number(number)) } <<< cardinality
-      rule \ITEM8,
-        head: \ITEM
-        tail: [ lesser, number, CARDINALITY ]
-        reduce: ->
-          [ _, number, cardinality ] = it.values
-          { repeat: (< Number(number)) } <<< cardinality
-      rule \ITEM9,
-        head: \ITEM
-        tail: [ lesser-equal, number, CARDINALITY ]
-        reduce: ->
-          [ _, number, cardinality ] = it.values
-          { repeat: (<= Number(number)) } <<< cardinality
-      rule \ITEM10,
-        head: \ITEM
-        tail: [ string, CARDINALITY ]
-        reduce: ->
-          [ string, cardinality ] = it.values
-          string = string[1 to -2].join ''
-          { repeat: (== string) } <<< cardinality
-      rule \ITEM11,
-        head: \ITEM
-        tail: [ exclamation, string, CARDINALITY ]
-        reduce: ->
-          [ _, string, cardinality ] = it.values
-          string = string[1 to -2].join ''
-          { repeat: (!= string) } <<< cardinality
+        tail: [ PREDICATE, QTY ]
+        reduce: -> { repeat: it.values.0 } <<< it.values.1
 
-      rule \CARDINALITY1,
-        head: \CARDINALITY
-        tail: [ empty ]
-        reduce: -> { min: 1, max: 1 }
-      rule \CARDINALITY2,
-        head: \CARDINALITY
+      rule \ITEMS1,
+        head: \ITEMS
+        tail: [ ITEM ]
+        reduce: -> it.values.0
+      rule \ITEMS2,
+        head: \ITEMS
+        tail: [ ITEM, pipe, OR ]
+        reduce: -> { or: [it.values.0] ++ it.values.2 }
+      rule \ITEMS3,
+        head: \ITEMS
+        tail: [ ITEM, SEQ ]
+        reduce: -> { sequence: [it.values.0] ++ it.values.1 }
+
+      rule \SEQ1,
+        head: \SEQ
+        tail: [ ITEM ]
+        reduce: -> [ it.values.0 ]
+      rule \SEQ2,
+        head: \SEQ
+        tail: [ SEQ, ITEM ]
+        reduce: -> it.values.0 ++ [ it.values.1 ]
+
+      rule \OR1,
+        head: \OR
+        tail: [ ITEM ]
+        reduce: -> [ it.values.0 ]
+      rule \OR2,
+        head: \OR
+        tail: [ OR, pipe, ITEM ]
+        reduce: -> it.values.0 ++ [ it.values.2 ]
+
+      rule \PREDICATE_ID,
+        head: \PREDICATE
+        tail: [ id ]
+        reduce: ({values}) -> predicates[values.0]
+      rule \PREDICATE_ID_NOT,
+        head: \PREDICATE
+        tail: [ exclamation, id ]
+        reduce: ({values}) -> (-> not predicates[values.1](it))
+      rule \PREDICATE_NUMBER,
+        head: \PREDICATE
+        tail: [ number ]
+        reduce: ({values}) -> (== Number(values.0))
+      rule \PREDICATE_STRING,
+        head: \PREDICATE
+        tail: [ string ]
+        reduce: ->
+          string = it.values.0[1 to -2].join ''
+          (== string)
+      rule \PREDICATE_NOT_EQUAL_STRING,
+        head: \PREDICATE
+        tail: [ exclamation, string ]
+        reduce: ->
+          string = it.values.1[1 to -2].join ''
+          (!= string)
+      rule \PREDICATE_TRUE,
+        head: \PREDICATE
+        tail: [ underscore ]
+        reduce: -> ( -> true )
+      rule \PREDICATE_NOT_EQUAL_NUMBER,
+        head: \PREDICATE
+        tail: [ exclamation, number ]
+        reduce: ->
+          value = Number(it.values.1)
+          (!= value)
+      rule \PREDICATE_GREATER_NUMBER,
+        head: \PREDICATE
+        tail: [ greater, number ]
+        reduce: ({values}) -> (> Number(values.1))
+      rule \PREDICATE_GREATER_EQUAL_NUMBER,
+        head: \PREDICATE
+        tail: [ greater-equal, number ]
+        reduce: ({values}) -> (>= Number(values.1))
+      rule \PREDICATE6,
+        head: \PREDICATE
+        tail: [ lesser, number ]
+        reduce: ({values}) -> (< Number(values.1))
+      rule \PREDICATE7,
+        head: \PREDICATE
+        tail: [ lesser-equal, number ]
+        reduce: ({values}) -> (<= Number(values.1))
+
+
+      rule \QTY_ZERO_OR_MORE,
+        head: \QTY
         tail: [ wildcard ]
         reduce: -> {}
-      rule \CARDINALITY3,
-        head: \CARDINALITY
+      rule \QTY_ZERO_OR_ONE,
+        head: \QTY
         tail: [ question ]
         reduce: -> { min: 0 }
-      rule \CARDINALITY4,
-        head: \CARDINALITY
+      rule \QTY_ONE_OR_MORE,
+        head: \QTY
         tail: [ plus ]
         reduce: -> { min: 1 }
-      rule \CARDINALITY5,
-        head: \CARDINALITY
+      rule \QTY_EXACTLY,
+        head: \QTY
         tail: [ braces-open, integer, braces-close ]
         reduce: -> { min: it.values.1, max: it.values.1 }
-      rule \CARDINALITY6,
-        head: \CARDINALITY
+      rule \QTY6,
+        head: \QTY
         tail: [ braces-open, integer, comma, integer, braces-close ]
         reduce: -> { min: it.values.1, max: it.values.3 }
-      rule \CARDINALITY7,
-        head: \CARDINALITY
+      rule \QTY7,
+        head: \QTY
         tail: [ braces-open, comma, integer, braces-close ]
         reduce: -> { min: 0, max: it.values.3 }
-      rule \CARDINALITY8,
-        head: \CARDINALITY
+      rule \QTY8,
+        head: \QTY
         tail: [ braces-open, integer, comma, braces-close ]
         reduce: -> { min: it.values.1 }
 
