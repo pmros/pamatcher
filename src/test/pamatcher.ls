@@ -120,8 +120,8 @@ describe 'Pamatcher' !->
     regex = /^ab*c$/
     matcher = pamatcher do
       * \a
-      * repeat: \b
-      * \c
+        repeat: \b
+        \c
     expect matcher.test(input) .to-be regex.test(input)
 
   test 'can match named group on a predicate expression' !->
@@ -174,3 +174,46 @@ describe 'Pamatcher' !->
       * repeat: (<5), min: 1, name: \catched
       * (isnt 0)
     expect matcher.match(input).catched .to-equal [ 2 1 3 ]
+
+  test 'can match a item using pes' !->
+    input = [ 2 ]
+    matcher = pamatcher 'even', even: -> it%2 == 0
+    expect matcher.test(input) .to-be true
+
+  test 'can match a literal numeric item using pes' !->
+    input = [ 2 ]
+    matcher = pamatcher '2'
+    expect matcher.test(input) .to-be true
+
+  test 'can match a simple sequence using pes' !->
+    input = [ 2 5 8 ]
+    matcher = pamatcher 'even odd even',
+      even: -> it%2 == 0
+      odd:  -> it%2 == 1
+    expect matcher.test(input) .to-be true
+
+  test 'can match a sequence with repeated items using pes' !->
+    input = [ 2 5 3 1 8 ]
+    matcher = pamatcher 'even odd* even',
+      even: -> it%2 == 0
+      odd:  -> it%2 == 1
+    expect matcher.test(input) .to-be true
+
+  test 'can match a sequence with optional items using pes' !->
+    input = [ 2 8 ]
+    matcher = pamatcher 'even odd? even',
+      even: -> it%2 == 0
+      odd:  -> it%2 == 1
+    expect matcher.test(input) .to-be true
+
+  test 'can match a named group using pes' !->
+    input = [ 2 1 5 7 8 ]
+    matcher = pamatcher 'even (catched: odd*) even',
+      even: -> it%2 == 0
+      odd:  -> it%2 == 1
+    expect matcher.match(input).catched .to-equal [ 1 5 7 ]
+
+  test 'can match an or expression using pes' !->
+    input = [ 0 5 1 ]
+    matcher = pamatcher '0 (2|5|10) 1'
+    expect matcher.test(input) .to-be true
