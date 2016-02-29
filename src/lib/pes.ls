@@ -14,13 +14,19 @@ plus      = terminal \PLUS /\+/
 question  = terminal \QUESTION /\?/
 braces-open  = terminal \BRACES_OPEN /\{/
 braces-close = terminal \BRACES_CLOSE /\}/
-comma = terminal \COMMA /\,/
+comma        = terminal \COMMA /\,/
 parens-open  = terminal \PARENS_OPEN /\(/
 parens-close = terminal \PARENS_CLOSE /\)/
-colon = terminal \COLON /:/
-exclamation = terminal \EXCLAMATION /\!/
-ampersand = terminal \AMPERSAND /\&/
-pipe = terminal \PIPE /\|/
+colon        = terminal \COLON /:/
+exclamation  = terminal \EXCLAMATION /\!/
+ampersand    = terminal \AMPERSAND /\&/
+pipe         = terminal \PIPE /\|/
+underscore   = terminal \UNDERSCORE /\_/
+greater       = terminal \GREATER /\>/
+greater-equal = terminal \GREATER_EQUAL /\>=/
+lesser        = terminal \LESSER /\</
+lesser-equal  = terminal \LESSER_EQUAL /\<=/
+string        = terminal \STRING /\'[^']*\'/
 
 S = non-terminal \S
 ITEM = non-terminal \ITEM
@@ -46,14 +52,6 @@ pes-grammar = (predicates) ->
         tail: [ ATOM ]
         reduce: -> it.values.0
       rule \S3,
-        head: \S
-        tail: [ exclamation, ATOM ]
-        reduce: -> { not: it.values.1 }
-      rule \S4,
-        head: \S
-        tail: [ S, ampersand, ATOM ]
-        reduce: -> { and: it.values.1 }
-      rule \S5,
         head: \S
         tail: [ S, pipe, ATOM ]
         reduce: ->
@@ -83,8 +81,62 @@ pes-grammar = (predicates) ->
         reduce: -> { repeat: predicates[it.values.0] } <<< it.values.1
       rule \ITEM2,
         head: \ITEM
+        tail: [ underscore, CARDINALITY ]
+        reduce: -> { repeat: -> true } <<< it.values.1
+      rule \ITEM3,
+        head: \ITEM
+        tail: [ exclamation, id, CARDINALITY ]
+        reduce: ->
+          [ _, id, cardinality ] = it.values
+          { repeat: -> not predicates[id](it) } <<< cardinality
+      rule \ITEM4,
+        head: \ITEM
         tail: [ number, CARDINALITY ]
         reduce: -> { repeat: Number(it.values.0) } <<< it.values.1
+      rule \ITEM5,
+        head: \ITEM
+        tail: [ exclamation, number, CARDINALITY ]
+        reduce: ->
+          [ _, number, cardinality ] = it.values
+          { repeat: (!= Number(number)) } <<< cardinality
+      rule \ITEM6,
+        head: \ITEM
+        tail: [ greater, number, CARDINALITY ]
+        reduce: ->
+          [ _, number, cardinality ] = it.values
+          { repeat: (> Number(number)) } <<< cardinality
+      rule \ITEM7,
+        head: \ITEM
+        tail: [ greater-equal, number, CARDINALITY ]
+        reduce: ->
+          [ _, number, cardinality ] = it.values
+          { repeat: (>= Number(number)) } <<< cardinality
+      rule \ITEM8,
+        head: \ITEM
+        tail: [ lesser, number, CARDINALITY ]
+        reduce: ->
+          [ _, number, cardinality ] = it.values
+          { repeat: (< Number(number)) } <<< cardinality
+      rule \ITEM9,
+        head: \ITEM
+        tail: [ lesser-equal, number, CARDINALITY ]
+        reduce: ->
+          [ _, number, cardinality ] = it.values
+          { repeat: (<= Number(number)) } <<< cardinality
+      rule \ITEM10,
+        head: \ITEM
+        tail: [ string, CARDINALITY ]
+        reduce: ->
+          [ string, cardinality ] = it.values
+          string = string[1 to -2].join ''
+          { repeat: (== string) } <<< cardinality
+      rule \ITEM11,
+        head: \ITEM
+        tail: [ exclamation, string, CARDINALITY ]
+        reduce: ->
+          [ _, string, cardinality ] = it.values
+          string = string[1 to -2].join ''
+          { repeat: (!= string) } <<< cardinality
 
       rule \CARDINALITY1,
         head: \CARDINALITY

@@ -217,3 +217,29 @@ describe 'Pamatcher' !->
     input = [ 0 5 1 ]
     matcher = pamatcher '0 (2|5|10) 1'
     expect matcher.test(input) .to-be true
+
+  test 'can match a not-equal number expression using pes' !->
+    input = [ 0 5 1 ]
+    matcher = pamatcher '0 !5 1'
+    expect matcher.test(input) .to-be false
+
+  test 'can match a not-predicate expression using pes' !->
+    input = [ 2 5 4 ]
+    matcher = pamatcher 'even !even even',
+      even: -> it%2 == 0
+    expect matcher.test(input) .to-be true
+
+  test 'can match a sequence with an arbitrary item using pes' !->
+    input = [ 2 5 4 ]
+    matcher = pamatcher '2 _ 4'
+    expect matcher.test(input) .to-be true
+
+  test 'can match a sequence with <,>,<=,>= predicates using pes' !->
+    input = [ 2 5 4 9 10 69]
+    matcher = pamatcher '2 >4 <5 >=9 <=10 >60'
+    expect matcher.test(input) .to-be true
+
+  test 'can match a sequence of strings using pes' !->
+    input = [ \first 100 \last ]
+    matcher = pamatcher "'first' _ !'last'"
+    expect matcher.test(input) .to-be false
