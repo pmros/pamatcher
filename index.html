@@ -74,10 +74,10 @@
           });
 
           $("#test").click((e) => {
-            var pattern = eval(patternEditor.getValue());
+            var pattern = eval("[" + patternEditor.getValue() + "]");
             var input = eval(inputEditor.getValue());
 
-            var matcher = pamatcher(pattern);
+            var matcher = pamatcher.apply(null, pattern);
             var result = matcher.exec(input);
             var output = '';
 
