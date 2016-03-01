@@ -239,6 +239,11 @@ describe 'Pamatcher' !->
     matcher = pamatcher '2 >4 <5 >=9 <=10 >60'
     expect matcher.test(input) .to-be true
 
+  test 'can match a numeric range using pes' !->
+    input = [ 1 5 10]
+    matcher = pamatcher '1 1..10 10'
+    expect matcher.test(input) .to-be true
+
   test 'can match a sequence of strings using pes' !->
     input = [ \first 100 \last ]
     matcher = pamatcher "'first' _ !'last'"

@@ -8,7 +8,7 @@ terminal = (name, body='') -> new k.data.Terminal { name, body }
 
 id        = terminal \ID /[a-zA-Z][a-zA-Z0-9]*/
 integer   = terminal \INTEGER /[0-9]+/
-number    = terminal \NUMBER /\-?[0-9]+(\.[0-9]*)?/
+number    = terminal \NUMBER /\-?[0-9]+(\.[0-9]+)?/
 wildcard  = terminal \WILDCARD /\*/
 plus      = terminal \PLUS /\+/
 question  = terminal \QUESTION /\?/
@@ -27,6 +27,7 @@ greater-equal = terminal \GREATER_EQUAL /\>=/
 lesser        = terminal \LESSER /\</
 lesser-equal  = terminal \LESSER_EQUAL /\<=/
 string        = terminal \STRING /\'[^']*\'/
+two-dots      = terminal \TWO-DOTS /\.\./
 
 S = non-terminal \S
 ITEM = non-terminal \ITEM
@@ -103,6 +104,7 @@ pes-grammar = (predicates) ->
         tail: [ OR, pipe, ITEM ]
         reduce: -> it.values.0 ++ [ it.values.2 ]
 
+
       rule \PREDICATE_ID,
         head: \PREDICATE
         tail: [ id ]
@@ -145,15 +147,22 @@ pes-grammar = (predicates) ->
         head: \PREDICATE
         tail: [ greater-equal, number ]
         reduce: ({values}) -> (>= Number(values.1))
-      rule \PREDICATE6,
+      rule \PREDICATE_LESSER_NUMBER,
         head: \PREDICATE
         tail: [ lesser, number ]
         reduce: ({values}) -> (< Number(values.1))
-      rule \PREDICATE7,
+      rule \PREDICATE_LESSER_EQUAL_NUMBER,
         head: \PREDICATE
         tail: [ lesser-equal, number ]
         reduce: ({values}) -> (<= Number(values.1))
-
+      rule \PREDICATE_RANGE_NUMBER,
+        head: \PREDICATE
+        tail: [ number, two-dots, number ]
+        reduce: ({values}) ->
+          [ number1, _, number2] = values
+          number1 = Number(number1)
+          number2 = Number(number2)
+          ( -> number1 <= it <= number2)
 
       rule \QTY_ZERO_OR_MORE,
         head: \QTY
@@ -171,15 +180,15 @@ pes-grammar = (predicates) ->
         head: \QTY
         tail: [ braces-open, integer, braces-close ]
         reduce: -> { min: it.values.1, max: it.values.1 }
-      rule \QTY6,
+      rule \QTY_RANGE,
         head: \QTY
         tail: [ braces-open, integer, comma, integer, braces-close ]
         reduce: -> { min: it.values.1, max: it.values.3 }
-      rule \QTY7,
+      rule \QTY_MAX,
         head: \QTY
         tail: [ braces-open, comma, integer, braces-close ]
         reduce: -> { min: 0, max: it.values.3 }
-      rule \QTY8,
+      rule \QTY_MIN,
         head: \QTY
         tail: [ braces-open, integer, comma, braces-close ]
         reduce: -> { min: it.values.1 }
