@@ -172,11 +172,11 @@
         <textarea class="code readonly auto">
 var pamatcher = require('pamatcher');
 
-var matcher = pamatcher(
+var matcher = pamatcher([
   (i) => i < 10,
   { repeat: (i) => i%2==0, name: 'mycatch' },
   (i) => i > 10
-);
+]);
 
 var result = matcher.exec(input);
 if(result.test) {
@@ -221,7 +221,6 @@ if(result.test) {
         <p>A sequence of expressions.
         It's something like this regex:  /abc/</p>
         <p>If you pass an array as pattern expression, pamatcher will convert it to a sequence pattern expression for you.</p>
-        <p>In adition, pamatcher function can automatically convert any number of arguments to a sequence expression (see example above).</p>
 
         <h4>{ or: [array of expressions] }</h4>
         <p>Logical or of multiple expressions.
