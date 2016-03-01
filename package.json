@@ -1,6 +1,6 @@
 {
   "name": "pamatcher",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A pattern matching library for JavaScript iterators",
   "main": "lib/pamatcher.js",
   "homepage": "http://pamatcher.js.org",
